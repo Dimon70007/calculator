@@ -2,12 +2,9 @@ import React from 'react';
 import { BtnGroupContainerCss } from '../styles';
 
 const BtnGroupContainer = props => (
-  <div className={BtnGroupContainerCss.layout}>
-    {/* childrenGroups */}
+  <div className='table table-right'>
     {props.children.map(child => (
-      <div>
-        {child}
-      </div>
+      <tr style={{ 'text-align': 'right' }}>{child}</tr>
     ))}
   </div>
   );

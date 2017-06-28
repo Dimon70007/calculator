@@ -32,7 +32,7 @@ const CMN_BTN_NAMES = [
   'btn_CE',
   'btn_C',
   'btn_+-',
-  'btn_squareRoot',
+  'btn_2Rootx',
 ];
 
 const FUNC_LEFT_BTN_NAMES = [
@@ -64,8 +64,8 @@ const FUNC_RIGHT_BTN_NAMES = [
   'btn_*',
   'btn_1/x',
   'btn_-',
-  'btn_=',
   'btn_+',
+  'btn_=',
 ];
 
 export {

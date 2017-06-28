@@ -7,7 +7,7 @@ const FirstButtonGroup = ({ btnNames = [] }) => {
     <CreateButton key={btnName} name={btnName} />
   ));
   return (
-    <div className={`btn-group ${FirstButtonGroupCss.group}`}>
+    <div>
       {buttons}
     </div>
   );

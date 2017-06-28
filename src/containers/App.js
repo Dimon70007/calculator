@@ -15,28 +15,28 @@ class App extends React.PureComponent {
     } = this.props;
     return (
       <div className={AppCss.App}>
-        <div className={AppCss['App-main']}>
-          <div className='panel panel-default'>
-            <div className='panel-heading'>
-              <h3 className='panel-title'>Calculator</h3>
-            </div>
-            <div className='panel-body'>
-              <div className='well'>
-                <p>outer data</p>
-              </div>
-              <BtnGroupContainer>
-                <FirstButtonGroup btnNames={MEM_BTN_NAMES} />
-                <SecondButtonGroup btnNames={CMN_BTN_NAMES} />
-                <ThirdButtonGroup
-                  namesLeft={FUNC_LEFT_BTN_NAMES}
-                  namesRight={FUNC_RIGHT_BTN_NAMES}
-                  namesCenter={NUMS_BTN_NAMES}
-                />
-              </BtnGroupContainer>
-            </div>
+        <div className={'panel panel-default'}>
+          <div className='panel-heading'>
+            <h3 className='panel-title'>Calculator</h3>
           </div>
-          {children}
+          <div className='panel-body'>
+            <div className='well text-primary' style={{ 'text-align': 'right' }}>
+              <p>
+                outer data
+              </p>
+            </div>
+            <BtnGroupContainer>
+              <FirstButtonGroup btnNames={MEM_BTN_NAMES} />
+              <SecondButtonGroup btnNames={CMN_BTN_NAMES} />
+              <ThirdButtonGroup
+                namesLeft={FUNC_LEFT_BTN_NAMES}
+                namesRight={FUNC_RIGHT_BTN_NAMES}
+                namesCenter={NUMS_BTN_NAMES}
+              />
+            </BtnGroupContainer>
+          </div>
         </div>
+        {children}
       </div>
     );
   }
