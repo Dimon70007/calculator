@@ -1,10 +1,14 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-// import { PREFIX_OF_ACTION } from '../constants';
+import fieldState from './fieldStateReducer';
+import resultState from './resultState';
+import memoryState from './memoryState';
 
 const reducer = combineReducers({
   routing: routerReducer, // => state.routing
-  // PREFIX_OF_ACTION: myImportedReducer,
+  fieldState,
+  resultState, // func apply to resultValue
+  memoryState,
 });
 
 export default reducer;

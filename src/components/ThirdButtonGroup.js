@@ -1,46 +1,86 @@
 import React from 'react';
 import CreateButton from './CreateButton';
 import { itemsWrapper } from '../helpers';
-import { FirstButtonGroupCss } from '../styles';
 
-const ThirdButtonGroup = ({ namesLeft = [], namesRight = [], namesCenter = [] }) => {
-  const itemFunc = (btnName) => {
-    const wrap = btn => (<span className='col'>
-      {btn}
-    </span>);
-    switch (btnName) {
-      case 'btn_0':
-        return wrap(<CreateButton key={btnName} name={btnName} width='10em' />);
-      case 'btn_=':
-        return wrap(<CreateButton key={btnName} name={btnName} height='5em' />);
-      default:
-        return wrap(<CreateButton key={btnName} name={btnName} />);
-    }
-  };
-  const groupFunc = items => (<div >
-    {items}
-  </div>);
+const itemFunc = (btnName, onClick) => {
+  const wrap = btn => (<span key={btnName} className='col'>
+    {btn}
+  </span>);
+  switch (btnName) {
+    case 'btn_0':
+      return wrap(<CreateButton btnAction={onClick} name={btnName} width='10.363em' />);
+    case 'btn_=':
+      return wrap(<CreateButton btnAction={onClick} name={btnName} height='5.363em' />);
+    default:
+      return wrap(<CreateButton btnAction={onClick} name={btnName} />);
+  }
+};
+const groupFunc = (items, key) => (<div key={key}>
+  {items}
+</div>);
+
+const ThirdButtonGroup = ({
+                          namesLeft = [],
+                          namesRight = [],
+                          namesCenter = [],
+                          numOnClick,
+                          operationOnClick,
+                          funcOnClick }) => {
   const namesRightHead = namesRight.slice(0, 4);
   const namesRightTail = namesRight.slice(4);
-  const buttonsLeft = itemsWrapper(namesLeft, itemFunc, groupFunc, 5);
-  const buttonsCenter = itemsWrapper(namesCenter, itemFunc, groupFunc, 3);
-  const buttonsRightOne = itemsWrapper(namesRightHead, itemFunc, groupFunc, 1);
-  const buttonsRightTwo = itemsWrapper(namesRightTail, itemFunc, groupFunc, 1);
+  const buttonsLeft = itemsWrapper({
+    names: namesLeft,
+    itemFunc,
+    groupFunc,
+    groupCount: 5,
+    itemArgs: [funcOnClick],
+    // groupArgs: [],
+  });
+  const buttonsCenter = itemsWrapper({
+    names: namesCenter,
+    itemFunc,
+    groupFunc,
+    groupCount: 3,
+    itemArgs: [numOnClick],
+    // groupArgs: [],
+  });
+  const buttonsRightOne = itemsWrapper({
+    names: namesRightHead,
+    itemFunc,
+    groupFunc,
+    groupCount: 1,
+    itemArgs: [operationOnClick],
+    // groupArgs: [],
+  });
+  const buttonsRightTwo = itemsWrapper({
+    names: namesRightTail,
+    itemFunc,
+    groupFunc,
+    groupCount: 1,
+    itemArgs: [operationOnClick],
+    // groupArgs: [],
+  });
 
   return (
     <div>
-      <td>
-        {buttonsLeft}
-      </td>
-      <td>
-        {buttonsCenter}
-      </td>
-      <td>
-        {buttonsRightOne}
-      </td>
-      <td>
-        {buttonsRightTwo}
-      </td>
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              {buttonsLeft}
+            </td>
+            <td>
+              {buttonsCenter}
+            </td>
+            <td>
+              {buttonsRightOne}
+            </td>
+            <td>
+              {buttonsRightTwo}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 };

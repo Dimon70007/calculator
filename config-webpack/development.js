@@ -76,6 +76,8 @@ module.exports = Merge(CommonConfig, {
       'redux',
       'redux-devtools-extension',
       'redux-thunk',
+      'react-mathjax',
+      'mathjs',
     ],
     app: [
       'webpack-hot-middleware/client',

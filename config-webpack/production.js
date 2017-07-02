@@ -80,6 +80,7 @@ module.exports = Merge(CommonConfig, {
       'redux',
       'redux-devtools-extension',
       'redux-thunk',
+      'react-mathjax',
     ],
     app: [
       // 'font-awesome-loader',

@@ -1,15 +1,18 @@
 import React from 'react';
 import CreateButton from './CreateButton';
-import { FirstButtonGroupCss } from '../styles';
 
-const FirstButtonGroup = ({ btnNames = [] }) => {
+const FirstButtonGroup = ({ btnNames = [], memoryAction }) => {
   const buttons = btnNames.map(btnName => (
-    <CreateButton key={btnName} name={btnName} />
+    <CreateButton
+      key={btnName}
+      name={btnName}
+      btnAction={memoryAction}
+    />
   ));
   return (
-    <div>
+    <tr>
       {buttons}
-    </div>
+    </tr>
   );
 };
 

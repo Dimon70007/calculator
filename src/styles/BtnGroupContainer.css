@@ -1,4 +1,7 @@
 .layout {
   display: block;
   width: auto;
+  text-align: right;
+  /*margin: 2px;*/
+  /*padding: 2px;*/
 }
