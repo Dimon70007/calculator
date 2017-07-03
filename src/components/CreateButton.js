@@ -2,25 +2,24 @@ import React from 'react';
 import parseValue from './parseValue';
 
 const noop = () => {};
-const parseName = name => name.split('_')[1] || ' ';
 
 const CreateButton = ({
                     name = 'btn_ ',
+                    value = ' ',
                     width = '5em',
                     height = '2.5em',
                     btnAction = noop }) => {
-  const value = parseName(name);
   const btnValue = parseValue(value);
-  const clickHandler = btnVal => (event) => {
+  const clickHandler = (event) => {
     event.preventDefault();
-    btnAction(btnVal);
+    btnAction();
   };
   return (
     <button
       className={'btn btn-default'}
       style={{ 'margin-bottom': '5px', 'margin-left': '5px', width, height, 'font-size': '1em' }}
       name={name}
-      onClick={clickHandler(name)}
+      onClick={clickHandler}
     >
       {btnValue}
     </button>

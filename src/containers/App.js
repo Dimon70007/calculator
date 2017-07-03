@@ -5,23 +5,34 @@ import BtnGroupContainer from '../components/BtnGroupContainer';
 import FirstButtonGroup from '../components/FirstButtonGroup';
 import SecondButtonGroup from '../components/SecondButtonGroup';
 import ThirdButtonGroup from '../components/ThirdButtonGroup';
-import { funcSelector } from '../controllers';
-import { NUMS_BTN_NAMES, MEM_BTN_NAMES, CMN_BTN_NAMES, FUNC_RIGHT_BTN_NAMES, FUNC_LEFT_BTN_NAMES } from '../constants';
+import { NUM_BTNS, MEM_BTNS, CMN_BTNS, FUNC_LEFT_BTNS, FUNC_RIGHT_BTNS } from '../constants';
+import { normalizeField } from '../helpers';
 import { AppCss } from '../styles';
+import { btnAction } from '../actions';
 
 class App extends React.Component {
 
-  componentWillUnmount() {
-    localStorage.setItem('fieldState', JSON.stringify(this.props.fieldState));
-    localStorage.setItem('resultState', JSON.stringify(this.props.resultState));
-  }
+  // componentWillUnmount() {
+  //   localStorage.setItem('fieldState', JSON.stringify(this.props.fieldState));
+  //   localStorage.setItem('resultState', JSON.stringify(this.props.resultState));
+  // }
 
   render() {
+    const {
+      memoryState,
+      fieldState,
+      resultState,
+      btnActn,
+    } = this.props;
+    const normField = normalizeField(fieldState, 16);
     const fieldStr = (<p>
-      {this.props.fieldState.join('')}
+      {normField || ' '}
     </p>);
     const resultStr = (<p>
-      {this.props.resultState.value}
+      {resultState.value || ' '}
+    </p>);
+    const memStr = (<p>
+      { memoryState ? `M: ${memoryState}` : '     '}
     </p>);
     return (
       <div className={AppCss.App}>
@@ -33,21 +44,22 @@ class App extends React.Component {
             <div className='well text-primary' style={{ textAlign: 'right' }}>
               {fieldStr}
               {resultStr}
+              {memStr}
             </div>
             <BtnGroupContainer>
-              <FirstButtonGroup btnNames={MEM_BTN_NAMES} />
+              <FirstButtonGroup
+                btns={MEM_BTNS}
+                onClick={btnActn}
+              />
               <SecondButtonGroup
-                btnNames={CMN_BTN_NAMES}
-                clear={this.clear}
-                clearWithMemory={this.clearWithMemory}
+                btns={CMN_BTNS}
+                onClick={btnActn}
               />
               <ThirdButtonGroup
-                namesLeft={FUNC_LEFT_BTN_NAMES}
-                namesRight={FUNC_RIGHT_BTN_NAMES}
-                namesCenter={NUMS_BTN_NAMES}
-                numOnClick={funcSelector[NUMS_BTN_NAMES]}
-                operationOnClick={this.changeLast}
-                funcOnClick={this.addFunc}
+                btnsLeft={FUNC_LEFT_BTNS}
+                btnsRight={FUNC_RIGHT_BTNS}
+                btnsCenter={NUM_BTNS}
+                onClick={btnActn}
               />
             </BtnGroupContainer>
           </div>
@@ -57,14 +69,18 @@ class App extends React.Component {
   }
 }
 
-App.propTypes = {
-  children: PropTypes.node,
-};
+// App.propTypes = {
+//   children: PropTypes.node,
+// };
 
 const mapStateToProps = state => ({
-  resultStr: state.resultState,
+  resultState: state.resultState,
   fieldState: state.fieldState,
   memoryState: state.memoryState,
 });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => ({
+  btnActn: btn => () => dispatch(btnAction(btn)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

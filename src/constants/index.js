@@ -1,30 +1,31 @@
-const PATHNAME_PREFIX = '/'; // process.env.PUBLIC_URL;
+export const PATHNAME_PREFIX = '/'; // process.env.PUBLIC_URL;
 
-const RESULT_ACTION_TYPES = [
-  'ADD_TO_RESULT',
+export const PROMISE = 'PROMISE';
+
+export const RESULT_ACTION_TYPES = [
+  'ADD_NUM',
   'CALCULATE_RESULT', // func(result)
   'RESULT_DELETE_LAST',
   'CLEAR_RESULT',
 ];
 
-const MEMORY_ACTION_TYPES = [
+export const MEMORY_ACTION_TYPES = [
   'MEMORY_CLEAR',
   'MEMORY_ADD',
   'MEMORY_SET',
 ];
 
-const FIELD_ACTION_TYPES = [
+export const FIELD_ACTION_TYPES = [
   'ADD_FUNC', //  FIELD_CHANGE_LAST and CALCULATE_RESULT
   'ADD_OPERATION',
-  'FIELD_CHANGE_LAST',
-  'CALCULATE_FIELD',
+  'CLEAR_FIELD',
 ];
 
-export { NUM_BTNS, MEM_BTNS, CMN_BTNS, FUNC_LEFT_BTNS, FUNC_RIGHT_BTNS } from './buttons';
 export BTN_TYPES from './btnTypes';
 export {
-  RESULT_ACTION_TYPES,
-  MEMORY_ACTION_TYPES,
-  FIELD_ACTION_TYPES,
-  PATHNAME_PREFIX,
-};
+  NUM_BTNS,
+  MEM_BTNS,
+  CMN_BTNS,
+  FUNC_LEFT_BTNS,
+  FUNC_RIGHT_BTNS,
+} from './buttons';

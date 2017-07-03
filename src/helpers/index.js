@@ -1,6 +1,11 @@
 import math from 'mathjs';
 
-const factorial = (value) => {
+export itemsWrapper from './itemsWrapper';
+export normalizeField from './normalizeField';
+
+export const yroot = (value, base) => math.nthRoot(value, base);
+
+export const factorial = (value) => {
   const cache = {};
   const saveCacheAndReturn = (idx, val) => {
     cache[idx] = val;
@@ -18,31 +23,48 @@ const factorial = (value) => {
   return func(value);
 };
 
-const addFunction = (arr, func) => {
+export const addFunction = (arr, func) => {
   const newArr = [...arr];
   const last = newArr.pop();
   newArr.push(`${func}(${last})`);
   return newArr;
 };
 
-const setOper = (arr, oper) => {
-  const newArr = [...arr];
-  const last = newArr.pop();
-  switch (last) {
-    case '+':
-    case '-':
-    case '*':
-    case '/':
-      newArr.push(oper);
-      return newArr;
-    default:
-      newArr.push(last);
-      newArr.push(oper);
-      return newArr;
+export const setOper = (arr, { resultValue, val: oper, isCalculated }) => {
+  // const newArr = [...arr];
+  const last = arr[arr.length - 1];
+  // let value;
+  // let operation;
+  // switch (last) {
+  //   case '+':
+  //   case '-':
+  // }
+  const operations = ['+', '-', '*', '/', '^', 'yroot'];
+  const rest = isCalculated ? [oper] : [resultValue, oper];
+  if (operations.includes(last) && isCalculated) {
+    return [...arr.slice(0, -1), ...rest];
   }
+  return [...arr, ...rest];
 };
 
-const concatLast = (arr, str) => {
+export const setResultOper = (state, { val, func }) => {
+  const { value, previousValue, isCalculated, operation } = state;
+  if (isCalculated) {
+    return {
+      ...state,
+      operation: func,
+    };
+  }
+  return {
+    value: operation ? operation(Number(previousValue), Number(value)) : value,
+    previousValue: value,
+    isCalculated: true,
+    operation: func,
+    operationMark: val,
+  };
+};
+
+export const concatLast = (arr, str) => {
   const newArr = [...arr];
   const last = newArr.pop();
   const next = `${last}${str}`;
@@ -53,11 +75,4 @@ const concatLast = (arr, str) => {
   }
   newArr.push(next);
   return newArr;
-};
-export itemsWrapper from './itemsWrapper';
-export {
-  addFunction,
-  factorial,
-  concatLast,
-  setOper,
 };

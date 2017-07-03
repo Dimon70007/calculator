@@ -2,62 +2,72 @@ import React from 'react';
 import CreateButton from './CreateButton';
 import { itemsWrapper } from '../helpers';
 
-const itemFunc = (btnName, onClick) => {
-  const wrap = btn => (<span key={btnName} className='col'>
-    {btn}
+const itemFunc = (btn, onClick) => {
+  const wrap = (props = {}) => (<span key={btn.name} className='col'>
+    <CreateButton
+      key={btn.name}
+      name={btn.name}
+      value={btn.value}
+      btnAction={onClick(btn)}
+      {...props}
+    />
   </span>);
-  switch (btnName) {
+  switch (btn.name) {
     case 'btn_0':
-      return wrap(<CreateButton btnAction={onClick} name={btnName} width='10.363em' />);
+      return wrap({
+        width: '10.363em',
+      });
     case 'btn_=':
-      return wrap(<CreateButton btnAction={onClick} name={btnName} height='5.363em' />);
+      return wrap({
+        height: '5.363em',
+      });
     default:
-      return wrap(<CreateButton btnAction={onClick} name={btnName} />);
+      return wrap();
   }
 };
-const groupFunc = (items, key) => (<div key={key}>
-  {items}
-</div>);
+const groupFunc = (items, key) =>
+  (<div key={key}>
+    {items}
+  </div>);
 
 const ThirdButtonGroup = ({
-                          namesLeft = [],
-                          namesRight = [],
-                          namesCenter = [],
-                          numOnClick,
-                          operationOnClick,
-                          funcOnClick }) => {
-  const namesRightHead = namesRight.slice(0, 4);
-  const namesRightTail = namesRight.slice(4);
+                          btnsLeft = [],
+                          btnsRight = [],
+                          btnsCenter = [],
+                          onClick,
+ }) => {
+  const btnsRightHead = btnsRight.slice(0, 4);
+  const btnsRightTail = btnsRight.slice(4);
   const buttonsLeft = itemsWrapper({
-    names: namesLeft,
+    names: btnsLeft,
     itemFunc,
     groupFunc,
     groupCount: 5,
-    itemArgs: [funcOnClick],
+    itemArgs: [onClick],
     // groupArgs: [],
   });
   const buttonsCenter = itemsWrapper({
-    names: namesCenter,
+    names: btnsCenter,
     itemFunc,
     groupFunc,
     groupCount: 3,
-    itemArgs: [numOnClick],
+    itemArgs: [onClick],
     // groupArgs: [],
   });
   const buttonsRightOne = itemsWrapper({
-    names: namesRightHead,
+    names: btnsRightHead,
     itemFunc,
     groupFunc,
     groupCount: 1,
-    itemArgs: [operationOnClick],
+    itemArgs: [onClick],
     // groupArgs: [],
   });
   const buttonsRightTwo = itemsWrapper({
-    names: namesRightTail,
+    names: btnsRightTail,
     itemFunc,
     groupFunc,
     groupCount: 1,
-    itemArgs: [operationOnClick],
+    itemArgs: [onClick],
     // groupArgs: [],
   });
 

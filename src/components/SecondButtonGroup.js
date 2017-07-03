@@ -2,12 +2,15 @@ import React from 'react';
 import CreateButton from './CreateButton';
 
 const SecondButtonGroup = ({
-  btnNames = [],
+  btns = [],
+  onClick,
  }) => {
-  const buttons = btnNames.map(btnName => (
+  const buttons = btns.map(btn => (
     <CreateButton
-      key={btnName}
-      name={btnName}
+      key={btn.name}
+      name={btn.name}
+      value={btn.value}
+      btnAction={onClick(btn)}
     />
   ));
   return (

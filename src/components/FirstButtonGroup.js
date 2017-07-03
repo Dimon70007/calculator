@@ -1,12 +1,13 @@
 import React from 'react';
 import CreateButton from './CreateButton';
 
-const FirstButtonGroup = ({ btnNames = [], memoryAction }) => {
-  const buttons = btnNames.map(btnName => (
+const FirstButtonGroup = ({ btns = [], onClick }) => {
+  const buttons = btns.map(btn => (
     <CreateButton
-      key={btnName}
-      name={btnName}
-      btnAction={memoryAction}
+      key={btn.name}
+      name={btn.name}
+      value={btn.value}
+      btnAction={onClick(btn)}
     />
   ));
   return (

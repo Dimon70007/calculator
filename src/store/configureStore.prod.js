@@ -4,6 +4,7 @@ import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 import reducers from '../reducers';
 // import promisesMiddleware from '../middleware/promises';
+import { controllers } from '../middleware';
 
 
 const logger = createLogger();
@@ -11,7 +12,7 @@ const configureStore = preloadedState => createStore(
   reducers,
   preloadedState,
   // logger пока оставил, чтоб видеть баги (для обучения)
-  applyMiddleware(thunk, logger /* , promisesMiddleware*/),
+  applyMiddleware(thunk, logger, controllers /* , promisesMiddleware*/),
 );
 
 export default configureStore;

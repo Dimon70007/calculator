@@ -1,34 +1,18 @@
-import { ACTIONS } from '../constants';
-import { addFunction, concatLast, setOper } from '../helpers';
+import { MEMORY_ACTION_TYPES } from '../constants';
 
-const persistedState = localStorage.getItem('resultState');
-const initState = persistedState ? JSON.parse(persistedState) : {
-  isCalculated: false,
-  value: '',
-};
+const persistedState = localStorage.getItem('memoryState');
+const initState = persistedState ? JSON.parse(persistedState) : 0;
 
 const resultState = (state = initState, action) => {
   const { type, payload } = action;
-  const [addNum, addFunc, changeLast, deleteLast, clear, clearWithMemory, addOperation] = ACTIONS;
+  const [memoryClear, memoryAdd, memorySet] = MEMORY_ACTION_TYPES;
   switch (type) {
-    case addNum:
-      return `${state}${payload}`;
-    case addFunc:
-      return addFunction(state, payload);
-    case changeLast:
-      return state.length ? [
-        ...(state.slice(0, -1)),
-        payload,
-      ] : [];
-    case deleteLast:
-      return state.length ? [
-        ...(state.slice(0, -1)),
-      ] : [];
-    case clear:
-      return [];
-    case clearWithMemory:
-      localStorage.setItem('fieldState', '');
-      return [];
+    case memoryAdd:
+      return state + payload;
+    case memorySet:
+      return payload;
+    case memoryClear:
+      return 0;
     default:
       return state;
   }

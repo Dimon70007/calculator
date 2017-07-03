@@ -1,5 +1,5 @@
 
-const btnAction = btn => () => ({
+const btnAction = btn => ({
   type: btn.type,
   name: btn.name,
 });

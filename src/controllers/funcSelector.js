@@ -1,5 +1,5 @@
 import { BTN_TYPES } from '../constants';
-import { factorial } from '../helpers';
+import { factorial, yroot } from '../helpers';
 
 const [
   NUM,
@@ -21,16 +21,16 @@ const funcSelector = (
   BINDED_FIELD_ACTIONS,
   state,
 ) => {
-  const [addToResult, calcResult, resultDeleteLast, clearResult] = BINDED_RESULT_ACTIONS;
+  const [addNum, calcResult, resultDeleteLast, clearResult] = BINDED_RESULT_ACTIONS;
   const [memoryClear, memoryAdd, memorySet] = BINDED_MEMORY_ACTIONS;
-  const [addFunc, addOperation, fieldChangeLast, calculateField, clearField] = BINDED_FIELD_ACTIONS;
-  const { fieldState, resultState, memoryState } = state;
+  const [addFunc, addOperation, clearField] = BINDED_FIELD_ACTIONS;
+  const { resultState, memoryState } = state;
   const setResultValue = (value) => {
     clearResult();
-    addToResult(value);
+    addNum(value);
   };
-  const addValue = btnName => addToResult(btnName.slice(4));
-  const onceActn = btnName => (!resultState.includes(btnName)) && addToResult(btnName.slice(4));
+  const addValue = btnName => addNum(btnName.slice(4));
+  const onceActn = btnName => (!resultState.includes(btnName)) && addNum(btnName.slice(4));
   return ({
     [NUM]: addValue,
     [COMMA]: onceActn,
@@ -39,8 +39,7 @@ const funcSelector = (
         case 'btn_MC':
           return memoryClear();
         case 'btn_MR':
-          clearResult();
-          return addToResult(memoryState);
+          return setResultValue(memoryState);
         case 'btn_MS':
           return memorySet(Number(resultState.value));
         case 'btn_M+':
@@ -53,11 +52,11 @@ const funcSelector = (
     },
     [TRIGONOMETRIC]: (btnName) => {
       const val = btnName.slice(4);
-      const calcResultAndAddFunc = (calculated) => {
-        addFunc(val);
-        return setResultValue(calculated);
-      };
       const resultValue = Number(resultState.value);
+      const calcResultAndAddFunc = (calculatedValue) => {
+        addFunc(val);
+        return setResultValue(calculatedValue);
+      };
       switch (btnName) {
         case ('btn_ln'):
           return calcResultAndAddFunc(Math.log(resultValue));
@@ -91,9 +90,9 @@ const funcSelector = (
     },
     [CMN]: (btnName) => {
       const val = btnName.slice(4);
-      const calcResultAndAddFunc = (calculated) => {
+      const calcResultAndAddFunc = (calculatedValue) => {
         addFunc(val);
-        return setResultValue(calculated);
+        return setResultValue(calculatedValue);
       };
       const clearWithField = () => {
         clearResult();
@@ -117,11 +116,17 @@ const funcSelector = (
     },
     [MATH]: (btnName) => {
       const val = btnName.slice(4);
-      const calcResultAndAddFunc = (calculated) => {
+      const calcResultAndAddFunc = (calculatedValue) => {
         addFunc(val);
-        return setResultValue(calculated);
+        return setResultValue(calculatedValue);
       };
       const resultValue = Number(resultState.value);
+      const addOp = (func, str) =>
+        addOperation({
+          resultValue,
+          val: str,
+          func,
+          isCalculated: resultState.isCalculated });
       switch (btnName) {
         // TODO
         // case 'btn_(':
@@ -133,9 +138,9 @@ const funcSelector = (
         case 'btn_n!':
           return calcResultAndAddFunc(factorial(resultValue));
         case 'btn_x^y':
-          return addOperation(resultValue, '^');
+          return addOp((a, b) => a ** b, '^');
         case 'btn_sqrt[y]{x}':
-          return addOperation(resultValue, 'yroot');
+          return addOp((a, b) => yroot(a, b), 'yroot');
         case 'btn_x^3':
           return calcResultAndAddFunc(resultValue ** 2);
         case 'btn_sqrt[3]{x}':
@@ -151,17 +156,22 @@ const funcSelector = (
     [OPERATION]: (btnName) => {
       const val = btnName.slice(4);
       const resultValue = Number(resultState.value);
-      const calcResultAndAddFunc = (calculated) => {
+      const calcResultAndAddFunc = (calculatedValue) => {
         addFunc(val);
-        return setResultValue(calculated);
+        return setResultValue(calculatedValue);
       };
-      const addOp = () => addOperation(val);
+      const addOp = func => (resultState.isCalculated ?
+        addOperation({ resultValue, val, func, isCalculated: true }) :
+        addOperation({ resultValue, val, func }));
       switch (btnName) {
         case 'btn_/':
+          return addOp((a, b) => a / b);
         case 'btn_*':
+          return addOp((a, b) => a * b);
         case 'btn_-':
+          return addOp((a, b) => a - b);
         case 'btn_+':
-          return addOp();
+          return addOp((a, b) => a + b);
         // case 'btn_%': not realised in windows
         //   return noop();
         case 'btn_1/x':
@@ -170,7 +180,10 @@ const funcSelector = (
           return noop();
       }
     },
-    [CALC]: () => calculateField(fieldState),
+    [CALC]: () => {
+      clearField();
+      return calcResult();
+    },
     [NOOP]: noop,
     [TOGGLE]: () => {
        // 'btn_Inv' TODO

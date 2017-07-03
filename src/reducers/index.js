@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import fieldState from './fieldStateReducer';
+import fieldState from './fieldState';
 import resultState from './resultState';
 import memoryState from './memoryState';
 
