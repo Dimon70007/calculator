@@ -13,7 +13,10 @@
     "clean": "rm -rf ./dist/*",
     "test": "jest"
   },
-  "repository": "https://github.com/Dimon70007/calculator.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dimon70007/calculator.git"
+  },
   "keywords": [
     "webpack",
     "express",
