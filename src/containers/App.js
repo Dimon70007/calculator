@@ -12,10 +12,11 @@ import { btnAction } from '../actions';
 
 class App extends React.Component {
 
-  // componentWillUnmount() {
-  //   localStorage.setItem('fieldState', JSON.stringify(this.props.fieldState));
-  //   localStorage.setItem('resultState', JSON.stringify(this.props.resultState));
-  // }
+  componentWillUnmount() {
+    localStorage.setItem('fieldState', JSON.stringify(this.props.fieldState));
+    localStorage.setItem('resultState', JSON.stringify(this.props.resultState));
+    localStorage.setItem('memoryState', JSON.stringify(this.props.memoryState));
+  }
 
   render() {
     const {
@@ -24,16 +25,16 @@ class App extends React.Component {
       resultState,
       btnActn,
     } = this.props;
-    const normField = normalizeField(fieldState, 16);
-    const fieldStr = (<p>
-      {normField || ' '}
-    </p>);
-    const resultStr = (<p>
-      {resultState.value || ' '}
-    </p>);
-    const memStr = (<p>
-      { memoryState ? `M: ${memoryState}` : '     '}
-    </p>);
+    const normField = normalizeField(fieldState, 64);
+    const fieldStr = (<div>
+      {normField || '.'}
+    </div>);
+    const memStr = (<div className={memoryState ? 'pull-left' : 'pull-left hidden'}>
+      {`M: ${memoryState}`}
+    </div>);
+    const resultStr = (<div className='pull-right'>
+      {resultState.arg || resultState.value || '0'}
+    </div>);
     return (
       <div className={AppCss.App}>
         <div className={'panel panel-default'}>
@@ -43,8 +44,10 @@ class App extends React.Component {
           <div className='panel-body'>
             <div className='well text-primary' style={{ textAlign: 'right' }}>
               {fieldStr}
-              {resultStr}
-              {memStr}
+              <br />
+              <div className='row'>
+                {memStr}
+                {resultStr}</div>
             </div>
             <BtnGroupContainer>
               <FirstButtonGroup

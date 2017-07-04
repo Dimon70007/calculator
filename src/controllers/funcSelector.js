@@ -25,12 +25,27 @@ const funcSelector = (
   const [memoryClear, memoryAdd, memorySet] = BINDED_MEMORY_ACTIONS;
   const [addFunc, addOperation, clearField] = BINDED_FIELD_ACTIONS;
   const { resultState, memoryState } = state;
+
   const setResultValue = (value) => {
-    clearResult();
+    calcResult();
     addNum(value);
   };
+
   const addValue = btnName => addNum(btnName.slice(4));
   const onceActn = btnName => (!resultState.includes(btnName)) && addNum(btnName.slice(4));
+
+  const resultValue = Number(resultState.arg || resultState.value);
+
+  const setResultAndAddFunc = (newValue, btnName, isCalculated) => {
+    const val = btnName.slice(4);
+    addFunc({ newValue, val, resultValue, isCalculated: resultState.isCalculated });
+  };
+
+  const addOp = (func, btnName, value) => {
+    const val = value || btnName.slice(4);
+    return addOperation({ resultState, val, func });
+  };
+
   return ({
     [NUM]: addValue,
     [COMMA]: onceActn,
@@ -51,15 +66,9 @@ const funcSelector = (
       }
     },
     [TRIGONOMETRIC]: (btnName) => {
-      const val = btnName.slice(4);
-      const resultValue = Number(resultState.value);
-      const calcResultAndAddFunc = (calculatedValue) => {
-        addFunc(val);
-        return setResultValue(calculatedValue);
-      };
       switch (btnName) {
         case ('btn_ln'):
-          return calcResultAndAddFunc(Math.log(resultValue));
+          return setResultAndAddFunc(Math.log(resultValue), btnName, true);
         // TODO
         // case ('btn_ '):
         // case ('btn_Int'):
@@ -68,114 +77,87 @@ const funcSelector = (
         // case ('btn_Mod'):
         //   return noop();
         case ('btn_sinh'):
-          return calcResultAndAddFunc(Math.sinh(resultValue));
+          return setResultAndAddFunc(Math.sinh(resultValue), btnName, true);
         case ('btn_sin'):
-          return calcResultAndAddFunc(Math.sin(resultValue));
+          return setResultAndAddFunc(Math.sin(resultValue), btnName, true);
         case ('btn_cosh'):
-          return calcResultAndAddFunc(Math.cosh(resultValue));
+          return setResultAndAddFunc(Math.cosh(resultValue), btnName, true);
         case ('btn_cos'):
-          return calcResultAndAddFunc(Math.cos(resultValue));
+          return setResultAndAddFunc(Math.cos(resultValue), btnName, true);
         case ('btn_\\pi'):
-          return calcResultAndAddFunc(Math.PI);
+          return setResultAndAddFunc(Math.PI, btnName, true);
         case ('btn_tanh'):
-          return calcResultAndAddFunc(Math.tanh(resultValue));
+          return setResultAndAddFunc(Math.tanh(resultValue), btnName, true);
         case ('btn_tan'):
-          return calcResultAndAddFunc(Math.tan(resultValue));
+          return setResultAndAddFunc(Math.tan(resultValue), btnName, true);
         // TODO
         // case ('btn_Exp'):
-        //   return calcResultAndAddFunc(Math.log(resultValue));
+        //   return setResultAndAddFunc(Math.log(resultValue), btnName, true);
         default:
           return noop();
       }
     },
     [CMN]: (btnName) => {
-      const val = btnName.slice(4);
-      const calcResultAndAddFunc = (calculatedValue) => {
-        addFunc(val);
-        return setResultValue(calculatedValue);
-      };
       const clearWithField = () => {
         clearResult();
-        return clearField();
+        clearField();
       };
-      const resultValue = Number(resultState.value);
       switch (btnName) {
         case 'btn_leftarrow':
           return resultDeleteLast();
         case 'btn_CE':
-          return clearWithField();
-        case 'btn_C':
           return clearResult();
-        case 'btn_negate':
-          return calcResultAndAddFunc(-resultValue);
-        case 'btn_√':
-          return calcResultAndAddFunc(Math.sqrt(resultValue));
+        case 'btn_C':
+          return clearWithField();
         default:
           return noop();
       }
     },
     [MATH]: (btnName) => {
-      const val = btnName.slice(4);
-      const calcResultAndAddFunc = (calculatedValue) => {
-        addFunc(val);
-        return setResultValue(calculatedValue);
-      };
-      const resultValue = Number(resultState.value);
-      const addOp = (func, str) =>
-        addOperation({
-          resultValue,
-          val: str,
-          func,
-          isCalculated: resultState.isCalculated });
       switch (btnName) {
         // TODO
         // case 'btn_(':
         //   return noop();
         // case 'btn_)':
           // return noop();
+        case 'btn_negate':
+          return setResultAndAddFunc(-resultValue, btnName, resultState.isCalculated);
+        case 'btn_√':
+          return setResultAndAddFunc(Math.sqrt(resultValue), btnName, true);
         case 'btn_x^2':
-          return calcResultAndAddFunc(resultValue ** 2);
+          return setResultAndAddFunc(resultValue ** 2, btnName, true);
         case 'btn_n!':
-          return calcResultAndAddFunc(factorial(resultValue));
+          return setResultAndAddFunc(factorial(resultValue), btnName, true);
         case 'btn_x^y':
-          return addOp((a, b) => a ** b, '^');
+          return addOp((a, b) => a ** b, btnName, '^');
         case 'btn_sqrt[y]{x}':
-          return addOp((a, b) => yroot(a, b), 'yroot');
+          return addOp((a, b) => yroot(a, b), btnName, 'yroot');
         case 'btn_x^3':
-          return calcResultAndAddFunc(resultValue ** 2);
+          return setResultAndAddFunc(resultValue ** 2, btnName, true);
         case 'btn_sqrt[3]{x}':
-          return calcResultAndAddFunc(Math.cbrt(resultValue));
+          return setResultAndAddFunc(Math.cbrt(resultValue), 'btn_3root', true);
         case 'btn_log':
-          return calcResultAndAddFunc(Math.log10(resultValue));
+          return setResultAndAddFunc(Math.log10(resultValue), btnName, true);
         case 'btn_10^x':
-          return calcResultAndAddFunc(10 ** resultValue);
+          return setResultAndAddFunc(10 ** resultValue, btnName, true);
         default:
           return noop();
       }
     },
     [OPERATION]: (btnName) => {
-      const val = btnName.slice(4);
-      const resultValue = Number(resultState.value);
-      const calcResultAndAddFunc = (calculatedValue) => {
-        addFunc(val);
-        return setResultValue(calculatedValue);
-      };
-      const addOp = func => (resultState.isCalculated ?
-        addOperation({ resultValue, val, func, isCalculated: true }) :
-        addOperation({ resultValue, val, func }));
       switch (btnName) {
         case 'btn_/':
-          return addOp((a, b) => a / b);
+          return addOp((a, b) => a / b, btnName);
         case 'btn_*':
-          return addOp((a, b) => a * b);
+          return addOp((a, b) => a * b, btnName);
         case 'btn_-':
-          return addOp((a, b) => a - b);
+          return addOp((a, b) => a - b, btnName);
         case 'btn_+':
-          return addOp((a, b) => a + b);
+          return addOp((a, b) => a + b, btnName);
         // case 'btn_%': not realised in windows
         //   return noop();
         case 'btn_1/x':
-          return calcResultAndAddFunc(1 / resultValue);
+          return setResultAndAddFunc(1 / resultValue, btnName, true);
         default:
           return noop();
       }

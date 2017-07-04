@@ -141,7 +141,7 @@ export const CMN_BTNS = [
     type: CMN,
   },
   {
-    name: 'btn_+-',
+    name: 'btn_negate',
     value: '+-',
     type: MATH,
   },

@@ -1,5 +1,7 @@
 import math from 'mathjs';
 
+const operations = ['+', '-', '*', '/', '^', 'yroot'];
+
 export itemsWrapper from './itemsWrapper';
 export normalizeField from './normalizeField';
 
@@ -23,31 +25,32 @@ export const factorial = (value) => {
   return func(value);
 };
 
-export const addFunction = (arr, func) => {
-  const newArr = [...arr];
-  const last = newArr.pop();
-  newArr.push(`${func}(${last})`);
-  return newArr;
+export const addFunction = (arr, { val: func, resultValue, isCalculated }) => {
+  const item = `${func}(${resultValue})`;
+  const last = arr[arr.length - 1];
+  if (last.includes('(')) {
+    return [...arr.slice(0, -1), `${func}(${last})`];
+  }
+  return [...arr, item];  // (!isCalculated && func === 'negate') ? arr : [...arr, item];
 };
 
-export const setOper = (arr, { resultValue, val: oper, isCalculated }) => {
-  // const newArr = [...arr];
+export const setOper = (arr, { arg, val: oper, isCalculated }) => {
   const last = arr[arr.length - 1];
-  // let value;
-  // let operation;
-  // switch (last) {
-  //   case '+':
-  //   case '-':
-  // }
-  const operations = ['+', '-', '*', '/', '^', 'yroot'];
-  const rest = isCalculated ? [oper] : [resultValue, oper];
+  const rest = [arg, oper];
+  if (last.includes('(')) {
+    return [...arr, oper];
+  }
+  const multiDivide = ['*', '/'];
+  if (multiDivide.includes(oper)) {
+    return ['(', ...arr, arg, ')', oper];
+  }
   if (operations.includes(last) && isCalculated) {
-    return [...arr.slice(0, -1), ...rest];
+    return [...arr.slice(0, -1), oper];
   }
   return [...arr, ...rest];
 };
 
-export const setResultOper = (state, { val, func }) => {
+export const setResultOper = (state, { func }) => {
   const { value, previousValue, isCalculated, operation } = state;
   if (isCalculated) {
     return {
@@ -60,7 +63,6 @@ export const setResultOper = (state, { val, func }) => {
     previousValue: value,
     isCalculated: true,
     operation: func,
-    operationMark: val,
   };
 };
 

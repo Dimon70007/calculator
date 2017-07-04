@@ -3,11 +3,10 @@ import { setResultOper } from '../helpers';
 
 const persistedState = localStorage.getItem('resultState');
 const initObj = {
-  isCalculated: false,
+  isCalculated: false, // произошло ли вычисление операции
   operation: null,
-  operationMark: '',
   value: '',
-  previousValue: '',
+  arg: '',
 };
 const initState = persistedState ? JSON.parse(persistedState) : initObj;
 
@@ -19,38 +18,71 @@ const resultState = (state = initState, action) => {
     resultDeleteLast,
     clearResult,
   ] = RESULT_ACTION_TYPES;
-  const [, addOperation] = FIELD_ACTION_TYPES;
+  const [addFunc, addOperation] = FIELD_ACTION_TYPES;
   const {
     isCalculated,
     operation,
-    operationMark,
     value,
-    previousValue,
+    arg,
   } = state;
+  if (isCalculated) {
+    switch (type) {
+      case addFunc:
+      // val, resultValue
+        return {
+          ...state,
+          isCalculated: false,
+          arg: payload.newValue,
+        };
+      case addNum:
+        return {
+          operation,
+          value,
+          arg: payload,
+        };
+      case calculateResult:
+        return {
+          value,
+        };
+      case addOperation:
+        return {
+          ...state,
+          operation: payload.func,
+        };
+      case resultDeleteLast:
+        return state;
+      case clearResult:
+        return initObj;
+      default:
+        return state;
+    }
+  }
   switch (type) {
+    case addFunc:
+      return {
+        ...state,
+        isCalculated: false,
+        arg: payload.newValue,
+      };
     case addNum:
       return {
-        operation,
-        previousValue: isCalculated ? value : previousValue,
-        value: isCalculated ? payload : `${value}${payload}`,
+        ...state,
+        arg: `${arg}${payload}`,
       };
     case calculateResult:
       return {
         isCalculated: true,
-        value: operation && operation(Number(previousValue), Number(value)),
+        value: operation ? operation(Number(value), Number(arg)) : value,
       };
     case addOperation:
-      return setResultOper(state, payload);
-      // (payload.val === operationMark) ?
-      //   state : {
-      //     value: operation ? operation(Number(previousValue), Number(value)) : value,
-      //     previousValue: value,
-      //     isCalculated: true,
-      //     operation: payload.func,
-      //     operationMark: payload.val,
-      //   };
+    // resultValue, val, func, isCalculated
+      return {
+        isCalculated: true,
+        value: operation ? operation(Number(value), Number(arg)) : arg,
+        operation: payload.func,
+      };
     case resultDeleteLast:
-      return (!isCalculated && value.length) ? {
+      return (value.length) ? {
         ...state,
         value: value.slice(0, -1),
       } : state;
