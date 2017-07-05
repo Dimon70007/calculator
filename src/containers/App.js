@@ -12,7 +12,7 @@ import { btnAction } from '../actions';
 
 class App extends React.Component {
 
-  componentWillUnmount() {
+  componentDidUpdate() {
     localStorage.setItem('fieldState', JSON.stringify(this.props.fieldState));
     localStorage.setItem('resultState', JSON.stringify(this.props.resultState));
     localStorage.setItem('memoryState', JSON.stringify(this.props.memoryState));
