@@ -12,18 +12,6 @@ const fieldState = (state = initState, action) => {
   }
   const [addFunc, addOperation, clearField] = FIELD_ACTION_TYPES;
   const { resultState, val } = payload || {};
-  // if (isCalculated) {
-  //   switch (type) {
-  //     case addOperation:
-  //       return setOper(state, payload);
-  //     case addFunc:
-  //       return addFunction(state, payload);
-  //     case clearField:
-  //       return init;
-  //     default:
-  //       return state;
-  //   }
-  // }
   switch (type) {
     case addOperation:
       return setOper(state, { ...resultState, val });

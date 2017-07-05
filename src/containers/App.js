@@ -33,7 +33,7 @@ class App extends React.Component {
       {`M: ${memoryState}`}
     </div>);
     const resultStr = (<div className='pull-right'>
-      {resultState.arg || resultState.value || '0'}
+      {resultState.isCalculated ? resultState.value : resultState.arg}
     </div>);
     return (
       <div className={AppCss.App}>
@@ -42,7 +42,7 @@ class App extends React.Component {
             <h3 className='panel-title'>Calculator</h3>
           </div>
           <div className='panel-body'>
-            <div className='well text-primary' style={{ textAlign: 'right' }}>
+            <div className='well text-primary' style={{ textAlign: 'right', height: '7em' }}>
               {fieldStr}
               <br />
               <div className='row'>

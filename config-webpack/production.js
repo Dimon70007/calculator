@@ -89,6 +89,7 @@ module.exports = Merge(CommonConfig, {
       './src/index.js',
     ],
     bootstrap: bootstrapConf,
+    mathjs: 'mathjs',
   },
 
   module: {

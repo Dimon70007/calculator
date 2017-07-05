@@ -34,8 +34,8 @@ const funcSelector = (
   const addValue = btnName => addNum(btnName.slice(4));
   const onceActn = btnName => (!resultState.includes(btnName)) && addNum(btnName.slice(4));
 
-  const resultValue = Number(resultState.arg || resultState.value);
-
+  const resultValue = Number(resultState.isCalculated ? resultState.value : resultState.arg);
+  const resultArg = Number(resultState.arg);
   const setResultAndAddFunc = (newValue, btnName, isCalculated) => {
     const val = btnName.slice(4);
     addFunc({ newValue, val, resultValue, isCalculated: resultState.isCalculated });
@@ -56,11 +56,11 @@ const funcSelector = (
         case 'btn_MR':
           return setResultValue(memoryState);
         case 'btn_MS':
-          return memorySet(Number(resultState.value));
+          return memorySet(Number(resultValue));
         case 'btn_M+':
-          return memoryAdd(Number(resultState.value));
+          return memoryAdd(Number(resultValue));
         case 'btn_M-':
-          return memoryAdd(-Number(resultState.value));
+          return memoryAdd(-Number(resultValue));
         default:
           return noop();
       }
@@ -76,6 +76,9 @@ const funcSelector = (
         // case ('btn_F-E'):
         // case ('btn_Mod'):
         //   return noop();
+        // TODO
+        // case ('btn_Exp'):
+        //   return setResultAndAddFunc(Math.log(resultValue), btnName, true);
         case ('btn_sinh'):
           return setResultAndAddFunc(Math.sinh(resultValue), btnName, true);
         case ('btn_sin'):
@@ -90,9 +93,6 @@ const funcSelector = (
           return setResultAndAddFunc(Math.tanh(resultValue), btnName, true);
         case ('btn_tan'):
           return setResultAndAddFunc(Math.tan(resultValue), btnName, true);
-        // TODO
-        // case ('btn_Exp'):
-        //   return setResultAndAddFunc(Math.log(resultValue), btnName, true);
         default:
           return noop();
       }
@@ -140,6 +140,11 @@ const funcSelector = (
           return setResultAndAddFunc(Math.log10(resultValue), btnName, true);
         case 'btn_10^x':
           return setResultAndAddFunc(10 ** resultValue, btnName, true);
+        case 'btn_1/x':
+          return setResultAndAddFunc(1 / resultValue, btnName, true);
+        case 'btn_%':
+          console.log('resultArg ', resultArg, 'resultValue ', resultValue);
+          return setResultAndAddFunc((resultArg / resultState.value) * 100, 'btn_percent', true);
         default:
           return noop();
       }
@@ -154,10 +159,6 @@ const funcSelector = (
           return addOp((a, b) => a - b, btnName);
         case 'btn_+':
           return addOp((a, b) => a + b, btnName);
-        // case 'btn_%': not realised in windows
-        //   return noop();
-        case 'btn_1/x':
-          return setResultAndAddFunc(1 / resultValue, btnName, true);
         default:
           return noop();
       }

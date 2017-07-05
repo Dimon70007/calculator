@@ -1,13 +1,14 @@
 import math from 'mathjs';
 
-const operations = ['+', '-', '*', '/', '^', 'yroot'];
+const parser = math.parser();
+const secondaryOperations = ['+', '-'];
+const allOperations = ['+', '-', '*', '/', '^', 'yroot'];
 
-export itemsWrapper from './itemsWrapper';
-export normalizeField from './normalizeField';
+export function yroot(value, base) {
+  return math.nthRoot(Number(value), Number(base));
+}
 
-export const yroot = (value, base) => math.nthRoot(value, base);
-
-export const factorial = (value) => {
+export function factorial(value) {
   const cache = {};
   const saveCacheAndReturn = (idx, val) => {
     cache[idx] = val;
@@ -22,8 +23,16 @@ export const factorial = (value) => {
         return cache[n] || saveCacheAndReturn(n, math.factorial(n));
     }
   };
-  return func(value);
-};
+  return func(Number(value));
+}
+
+parser.set('yroot', yroot);
+parser.set('factorial', factorial);
+
+export const parseStr = str => parser.eval(str);
+export itemsWrapper from './itemsWrapper';
+export normalizeField from './normalizeField';
+
 
 export const addFunction = (arr, { val: func, resultValue, isCalculated }) => {
   const item = `${func}(${resultValue})`;
@@ -33,28 +42,42 @@ export const addFunction = (arr, { val: func, resultValue, isCalculated }) => {
   }
   return [...arr, item];  // (!isCalculated && func === 'negate') ? arr : [...arr, item];
 };
+export const strIncludes = (str = '', arr = []) => arr.reduce((acc, targetStr) => (acc || str.includes(targetStr)), false);
 
 export const setOper = (arr, { arg, val: oper, isCalculated }) => {
-  const last = arr[arr.length - 1];
+  const lastIdx = arr.length - 1;
+  const last = arr[lastIdx];
   const rest = [arg, oper];
   if (last.includes('(')) {
     return [...arr, oper];
   }
-  const multiDivide = ['*', '/'];
-  if (multiDivide.includes(oper)) {
-    return ['(', ...arr, arg, ')', oper];
-  }
-  if (operations.includes(last) && isCalculated) {
+  // если ставится знак после подсчета результата
+  // и он примари (!=secondaryOperations)
+  // - обрамить в скобки без последнего знака
+  // if (isCalculated
+  //   && allOperations.includes(last)
+  //   && !secondaryOperations.includes(oper)) {
+  //   return ['(', ...arr.slice(0, -1), ')', oper];
+  // } TODO
+  if (isCalculated && allOperations.includes(last)) {
     return [...arr.slice(0, -1), oper];
   }
   return [...arr, ...rest];
 };
 
-export const setResultOper = (state, { func }) => {
+export const setResultOper = (state, { func, val }) => {
   const { value, previousValue, isCalculated, operation } = state;
   if (isCalculated) {
     return {
       ...state,
+      operation: func,
+    };
+  }
+  if (secondaryOperations.includes(val)) {
+    return {
+      value: operation ? operation(Number(previousValue), Number(value)) : value,
+      previousValue: value,
+      isCalculated: true,
       operation: func,
     };
   }
