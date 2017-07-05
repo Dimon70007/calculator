@@ -1,0 +1,29 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: helvetica, arial, sans-serif;
+  background: url(/calculator/dist/imgs/hip-square.png);
+  overflow: auto;
+}
+
+.App__App__2G3rY {
+  text-align: center;
+  display: block;
+  overflow-x: auto;
+  width: calc(5em*12);
+  height:auto;
+  padding: 15px;
+}
+.FirstButtonGroup__group__Yw5-Y {
+  width: auto;
+  display: inline-block;
+}
+.BtnGroupContainer__layout__3P_iU {
+  display: block;
+  width: auto;
+  text-align: right;
+  /*margin: 2px;*/
+  /*padding: 2px;*/
+}
+
+/*# sourceMappingURL=../home/otvazhniy/jsProjects/calculator-on-react-redux/app.map*/
