@@ -5,7 +5,7 @@ const { join } = require('path');
 const bootstrapEntryPoints = require('../webpack.bootstrap.config');
 // const glob = require('glob');
 const CommonConfig = require('./common');
-const ClosureCompilerPlugin = require('webpack-closure-compiler');
+// const ClosureCompilerPlugin = require('webpack-closure-compiler');
 
 const extractCss = new ExtractTextPlugin({
   filename: '/css/[name].css',
@@ -152,22 +152,28 @@ module.exports = Merge(CommonConfig, {
         PUBLIC_URL: JSON.stringify(publicPath),
       },
     }),
-    new ClosureCompilerPlugin({
-      compiler: {
-        language_in: 'ECMASCRIPT6',
-        language_out: 'ECMASCRIPT5',
-        compilation_level: 'ADVANCED',
-      },
-      concurrency: 3,
-    }),
+    // new ClosureCompilerPlugin({
+    //   compiler: {
+    //     language_in: 'ECMASCRIPT6',
+    //     language_out: 'ECMASCRIPT5',
+    //     compilation_level: 'ADVANCED',
+    //   },
+    //   concurrency: 2,
+    // }),
     // new webpack.LoaderOptionsPlugin({
     //   minimize: true,
     //   debug: false,
     // }),
-    // new webpack.optimize.UglifyJsPlugin({
-    //   beautify: false,
-    //   mangle: false,
-    //   sourceMap: false,
-    // }),
+    new webpack.optimize.UglifyJsPlugin({
+      beautify: false,
+      mangle: {
+        screw_ie8: true,
+        keep_fnames: true,
+      },
+      compress: {
+        screw_ie8: true,
+      },
+      comments: false,
+    }),
   ],
 });
