@@ -27,7 +27,7 @@ class App extends React.Component {
     } = this.props;
     const normField = normalizeField(fieldState, 64);
     const fieldStr = (<div>
-      {normField || '.'}
+      {normField || ' '}
     </div>);
     const memStr = (<div className={memoryState ? 'pull-left' : 'pull-left hidden'}>
       {`M: ${memoryState}`}

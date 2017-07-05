@@ -144,7 +144,7 @@ const funcSelector = (
           return setResultAndAddFunc(1 / resultValue, btnName, true);
         case 'btn_%':
           console.log('resultArg ', resultArg, 'resultValue ', resultValue);
-          return setResultAndAddFunc((resultArg / resultState.value) * 100, 'btn_percent', true);
+          return setResultAndAddFunc((resultArg * resultState.value) / 100, 'btn_percent', true);
         default:
           return noop();
       }
