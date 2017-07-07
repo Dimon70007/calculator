@@ -56,7 +56,7 @@ const resultState = (state = initState, action) => {
           return {
             ...state,
             isCalculated: true,
-            value: history ? parseArrOfStr(newHistory(history)) : arg,
+            value: history.length > 2 ? parseArrOfStr(newHistory(history)) : arg,
             history: calcHistory(history),
           };
         case addOperation:
@@ -99,14 +99,14 @@ const resultState = (state = initState, action) => {
         return {
           ...state,
           isCalculated: true,
-          value: history ? parseArrOfStr(newHistory(history)) : arg,
+          value: history.length > 2 ? parseArrOfStr(newHistory(history)) : arg,
           history: calcHistory(history),
         };
       case addOperation:
         return {
           ...state,
           isCalculated: true,
-          value: history ? parseArrOfStr(newHistory(history)) : arg,
+          value: history.length > 2 ? parseArrOfStr(newHistory(history)) : arg,
           operation: payload.val,
           history: newHistory(history),
         };

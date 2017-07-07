@@ -37,7 +37,7 @@ export function factorial(value) {
   return func(math.bignumber(value));
 }
 
-export const joinArrOfStr = arr => arr.reduce((acc, item) => (typeof item === 'string' ? `${acc} ${item}` : `${acc} ( ${joinArrOfStr(item)} )`));
+export const joinArrOfStr = arr => arr.reduce((acc, item) => (Array.isArray(item) ? `${acc} ( ${joinArrOfStr(item)} )` : `${acc} ${item}`));
 
 export const parseArrOfStr = (arrOfStr) => {
   const str = joinArrOfStr(arrOfStr);
