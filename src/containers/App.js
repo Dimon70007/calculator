@@ -25,7 +25,7 @@ class App extends React.Component {
       resultState,
       btnActn,
     } = this.props;
-    const normField = normalizeField(fieldState, 64);
+    const normField = normalizeField(fieldState, 256);
     const fieldStr = (<div>
       {normField || ' '}
     </div>);
@@ -42,7 +42,7 @@ class App extends React.Component {
             <h3 className='panel-title'>Calculator</h3>
           </div>
           <div className='panel-body'>
-            <div className='well text-primary' style={{ textAlign: 'right', height: '7em' }}>
+            <div className='well text-primary' style={{ textAlign: 'right', height: '7em', 'overflow-x': 'hidden' }}>
               {fieldStr}
               <br />
               <div className='row'>

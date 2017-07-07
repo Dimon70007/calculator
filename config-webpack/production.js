@@ -83,13 +83,13 @@ module.exports = Merge(CommonConfig, {
       'react-mathjax',
     ],
     app: [
-      // 'font-awesome-loader',
-      // bootstrapEntryPoints.prod,
-      // 'tether',
       './src/index.js',
     ],
     bootstrap: bootstrapConf,
-    mathjs: 'mathjs',
+    mathjs: [
+      'mathjs',
+      'decimal.js',
+    ],
   },
 
   module: {

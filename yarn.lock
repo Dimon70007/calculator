@@ -1937,6 +1937,10 @@ decamelize@^1.0.0, decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
 
+decimal.js@7.1.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-7.1.2.tgz#af71a1e2e89a1493bbd456ac746a1a92263a707b"
+
 decimal.js@7.2.3:
   version "7.2.3"
   resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-7.2.3.tgz#6434c3b8a8c375780062fc633d0d2bbdb264cc78"

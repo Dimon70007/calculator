@@ -77,7 +77,6 @@ module.exports = Merge(CommonConfig, {
       'redux-devtools-extension',
       'redux-thunk',
       'react-mathjax',
-      'mathjs',
     ],
     app: [
       'webpack-hot-middleware/client',
@@ -87,12 +86,20 @@ module.exports = Merge(CommonConfig, {
       './src/index.js',
     ],
     bootstrap: bootstrapConf,
+    mathjs: [
+      'mathjs',
+      'decimal.js',
+    ],
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
+        include: [
+          /node_modules\/mathjs\/\/node_modules\/decimal.js\/\w*.js/,
+          /src/,
+        ],
         use: [
           {
             loader: 'babel-loader',

@@ -1,13 +1,14 @@
 import { RESULT_ACTION_TYPES, FIELD_ACTION_TYPES } from '../constants';
-import { parseStr, factorial, yroot } from '../helpers';
+import { parseArrOfStr /* , factorial, yroot */} from '../helpers';
 
 const persistedState = localStorage.getItem('resultState');
 const initObj = {
-  isCalculated: false, // произошло ли вычисление операции
+  isCalculated: true, // произошло ли вычисление операции
   operation: '',
-  str: '',
-  value: '',
+  history: [''],
+  value: '0',
   arg: '',
+  bracketsCountDiff: 0,
   func: () => {},
 };
 const initState = persistedState ? JSON.parse(persistedState) : initObj;
@@ -19,96 +20,130 @@ const resultState = (state = initState, action) => {
     calculateResult,
     resultDeleteLast,
     clearResult,
+    clearAll,
   ] = RESULT_ACTION_TYPES;
-  const [addFunc, addOperation] = FIELD_ACTION_TYPES;
+  const [addFunc, addOperation, , addLeftBracket, addRightBracket] = FIELD_ACTION_TYPES;
   const {
     isCalculated,
     operation,
     value,
     arg,
-    str,
-    func,
+    history,
+    bracketsCountDiff,
   } = state;
-  const newStr = (oldStr) => {
+
+  const newHistory = (oldHistory) => {
     if (operation === 'yroot') {
-      return `yroot(${value}, ${arg})`;
+      const previousArg = oldHistory.length ? oldHistory[oldHistory.length - 1] : value;
+      return [...oldHistory.slice(0, -1), `yroot(${previousArg}, ${arg})`];
     }
-    return `${oldStr} ${operation} ${arg}`;
+    return [...oldHistory, operation, arg];
   };
-  if (isCalculated) {
+
+  const calcHistory = oldHistory => (oldHistory ? ['(', ...newHistory(oldHistory), ')'] : arg);
+
+  try {
+    if (isCalculated) {
+      switch (type) {
+        case addNum:
+          return {
+            ...state,
+            isCalculated: false,
+            arg: payload,
+
+          };
+        case calculateResult:
+          return {
+            ...state,
+            isCalculated: true,
+            value: history ? parseArrOfStr(newHistory(history)) : arg,
+            history: calcHistory(history),
+          };
+        case addOperation:
+          return {
+            ...state,
+            operation: payload.val,
+            func: payload.func,
+          };
+        case addFunc:
+      // val, resultValue
+          return {
+            ...state,
+            isCalculated: false,
+            arg: payload.newValue,
+          };
+        case clearAll:
+          return initObj;
+        case clearResult:
+          return {
+            ...state,
+            isCalculated: false,
+            arg: '0',
+          };
+        case addLeftBracket:
+          return {
+            ...state,
+            bracketsCountDiff: bracketsCountDiff + 1,
+          };
+        default:
+          return state;
+      }
+    }
     switch (type) {
       case addNum:
         return {
           ...state,
-          isCalculated: false,
-          arg: payload,
+          arg: arg === '0' ? payload : `${arg}${payload}`,
         };
       case calculateResult:
         return {
           ...state,
           isCalculated: true,
-          // strIncludes(str, allOperations) ? parseStr(newStr(str)) : value || arg,
-          value: str ? parseStr(newStr(str)) : arg,
-          str: str ? parseStr(newStr(str)) : arg,
+          value: history ? parseArrOfStr(newHistory(history)) : arg,
+          history: calcHistory(history),
         };
       case addOperation:
         return {
           ...state,
+          isCalculated: true,
+          value: history ? parseArrOfStr(newHistory(history)) : arg,
           operation: payload.val,
-          func: payload.func,
+          history: newHistory(history),
         };
       case addFunc:
-      // val, resultValue
         return {
           ...state,
           isCalculated: false,
           arg: payload.newValue,
         };
       case resultDeleteLast:
-        return state;
-      case clearResult:
+        return (value.length) ? {
+          ...state,
+          value: value.slice(0, -1),
+        } : state;
+      case clearAll:
         return initObj;
+      case clearResult:
+        return {
+          ...state,
+          isCalculated: false,
+          arg: '0',
+        };
+      case addRightBracket:
+        return {
+          ...state,
+          bracketsCountDiff: bracketsCountDiff - 1,
+          history: [...history.slice(0, -1), payload],
+        };
       default:
         return state;
     }
-  }
-  switch (type) {
-    case addNum:
-      return {
-        ...state,
-        arg: `${arg}${payload}`,
-      };
-    case calculateResult:
-      return {
-        ...state,
-        isCalculated: true,
-        // strIncludes(str, allOperations) ? parseStr(newStr(str)) : value || arg,
-        value: str ? parseStr(newStr(str)) : arg,
-        str: str ? parseStr(newStr(str)) : arg,
-      };
-    case addOperation:
-      return {
-        isCalculated: true,
-        value: str ? parseStr(newStr(str)) : arg,
-        operation: payload.val,
-        str: newStr(str),
-        func: payload.func,
-      };
-    case addFunc:
-      return {
-        ...state,
-        isCalculated: false,
-        arg: payload.newValue,
-      };
-    case resultDeleteLast:
-      return (value.length) ? {
-        ...state,
-        value: value.slice(0, -1),
-      } : state;
-    case clearResult:
-      return initObj;
-    default:
-      return state;
+  } catch (error) {
+    return {
+      ...state,
+      isCalculated: true,
+      value: `wrong input ${error}`,
+    };
   }
 };
 

@@ -118,12 +118,12 @@ export const CMN_BTNS = [
   {
     name: 'btn_(',
     value: '(',
-    type: CMN,
+    type: MATH,
   },
   {
     name: 'btn_)',
     value: ')',
-    type: CMN,
+    type: MATH,
   },
   {
     name: 'btn_leftarrow',
@@ -151,6 +151,164 @@ export const CMN_BTNS = [
     type: MATH,
   },
 ];
+
+
+export const INV_CMN_BTNS = [
+  {
+    name: 'btn_ ',
+    value: ' ',
+    type: NOOP,
+  },
+  {
+    name: 'btn_Inv',
+    value: 'Inv',
+    type: TOGGLE,
+  },
+  {
+    name: 'btn_e^x',
+    value: 'e^x',
+    type: TRIGONOMETRIC,
+  },
+  {
+    name: 'btn_(',
+    value: '(',
+    type: MATH,
+  },
+  {
+    name: 'btn_)',
+    value: ')',
+    type: MATH,
+  },
+  {
+    name: 'btn_leftarrow',
+    value: '\\leftarrow',
+    type: CMN,
+  },
+  {
+    name: 'btn_CE',
+    value: 'CE',
+    type: CMN,
+  },
+  {
+    name: 'btn_C',
+    value: 'C',
+    type: CMN,
+  },
+  {
+    name: 'btn_negate',
+    value: '+-',
+    type: MATH,
+  },
+  {
+    name: 'btn_√',
+    value: '√',
+    type: MATH,
+  },
+];
+
+export const INV_FUNC_LEFT_BTNS = [
+  {
+    name: 'btn_Frac',
+    value: 'Frac',
+    type: TRIGONOMETRIC,
+  },
+  {
+    name: 'btn_sinh^-1',
+    value: 'sinh^-1',
+    type: TRIGONOMETRIC,
+  },
+  {
+    name: 'btn_sin^-1',
+    value: 'sin^-1',
+    type: TRIGONOMETRIC,
+  },
+  {
+    name: 'btn_x^2',
+    value: 'x^2',
+    type: MATH,
+  },
+  {
+    name: 'btn_n!',
+    value: 'n!',
+    type: MATH,
+  },
+  {
+    name: 'btn_deg',
+    value: 'deg',
+    type: TRIGONOMETRIC,
+  },
+  {
+    name: 'btn_cosh^-1',
+    value: 'cosh^-1',
+    type: TRIGONOMETRIC,
+  },
+  {
+    name: 'btn_cos^-1',
+    value: 'cos^-1',
+    type: TRIGONOMETRIC,
+  },
+  {
+    name: 'btn_x^y',
+    value: 'x^y',
+    type: MATH,
+  },
+  {
+    name: 'btn_sqrt[y]{x}',
+    value: '\\sqrt[y]{x}',
+    type: MATH,
+  },
+  {
+    name: 'btn_2*pi',
+    value: '\\2*pi',
+    type: TRIGONOMETRIC,
+  },
+  {
+    name: 'btn_tanh^-1',
+    value: 'tanh^-1',
+    type: TRIGONOMETRIC,
+  },
+  {
+    name: 'btn_tan^-1',
+    value: 'tan^-1',
+    type: TRIGONOMETRIC,
+  },
+  {
+    name: 'btn_x^3',
+    value: 'x^3',
+    type: MATH,
+  },
+  {
+    name: 'btn_sqrt[3]{x}',
+    value: '\\sqrt[3]{x}',
+    type: MATH,
+  },
+  {
+    name: 'btn_F-E',
+    value: 'F-E',
+    type: TRIGONOMETRIC,
+  },
+  {
+    name: 'btn_Exp',
+    value: 'Exp',
+    type: TRIGONOMETRIC,
+  },
+  {
+    name: 'btn_Mod',
+    value: 'Mod',
+    type: TRIGONOMETRIC,
+  },
+  {
+    name: 'btn_log',
+    value: 'log',
+    type: MATH,
+  },
+  {
+    name: 'btn_10^x',
+    value: '10^x',
+    type: MATH,
+  },
+];
+
 
 export const FUNC_LEFT_BTNS = [
   {

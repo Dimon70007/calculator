@@ -10,7 +10,7 @@ const fieldState = (state = initState, action) => {
   if (!FIELD_ACTION_TYPES.includes(type)) {
     return state;
   }
-  const [addFunc, addOperation, clearField] = FIELD_ACTION_TYPES;
+  const [addFunc, addOperation, clearField, addBracket] = FIELD_ACTION_TYPES;
   const { resultState, val } = payload || {};
   switch (type) {
     case addOperation:
@@ -19,6 +19,11 @@ const fieldState = (state = initState, action) => {
       return addFunction(state, payload);
     case clearField:
       return init;
+    case addBracket:
+      return resultState.isCalculated ? [
+        ...state,
+        val,
+      ] : state;
     default:
       return state;
   }

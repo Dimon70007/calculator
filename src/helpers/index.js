@@ -1,11 +1,21 @@
 import math from 'mathjs';
+// import * as Decimal from 'decimal.js';
 
-const parser = math.parser();
+export const bigmath = math.create({
+  number: 'BigNumber', // Default type of number:
+                       // 'number' (default), 'BigNumber', or 'Fraction'
+  precision: 64,       // Number of significant digits for BigNumbers
+});
+
+const parser = bigmath.parser();
+parser.set('yroot', yroot);
+parser.set('factorial', factorial);
+
 const secondaryOperations = ['+', '-'];
 const allOperations = ['+', '-', '*', '/', '^', 'yroot'];
 
 export function yroot(value, base) {
-  return math.nthRoot(Number(value), Number(base));
+  return math.nthRoot(math.bignumber(value), math.bignumber(base));
 }
 
 export function factorial(value) {
@@ -20,16 +30,33 @@ export function factorial(value) {
       case 1:
         return 1;
       default:
+        // return math.factorial(n);
         return cache[n] || saveCacheAndReturn(n, math.factorial(n));
     }
   };
-  return func(Number(value));
+  return func(math.bignumber(value));
 }
 
-parser.set('yroot', yroot);
-parser.set('factorial', factorial);
+export const joinArrOfStr = arr => arr.reduce((acc, item) => (typeof item === 'string' ? `${acc} ${item}` : `${acc} ( ${joinArrOfStr(item)} )`));
 
-export const parseStr = str => parser.eval(str);
+export const parseArrOfStr = (arrOfStr) => {
+  const str = joinArrOfStr(arrOfStr);
+  const parsed = parser.eval(str);
+  // let bracketCountDiff = 0;
+  // const firstBracketIdx = arrOfStr.reduce((acc, bracket, idx) => {
+  //   switch (bracket) {
+  //     case '(':
+  //       bracketCountDiff += 1;
+  //       return bracketCountDiff > 0 ? acc : idx;
+  //     case ')':
+  //       bracketCountDiff -= 1;
+  //       return acc;
+  //     default:
+  //       return acc;
+  //   }
+  // }, 0);
+  return parsed.toString ? parsed.toString() : parsed;
+};
 export itemsWrapper from './itemsWrapper';
 export normalizeField from './normalizeField';
 
@@ -37,32 +64,29 @@ export normalizeField from './normalizeField';
 export const addFunction = (arr, { val: func, resultValue, isCalculated }) => {
   const item = `${func}(${resultValue})`;
   const last = arr[arr.length - 1];
-  if (last.includes('(')) {
+  if (last.includes(')')) {
     return [...arr.slice(0, -1), `${func}(${last})`];
   }
   return [...arr, item];  // (!isCalculated && func === 'negate') ? arr : [...arr, item];
 };
+
 export const strIncludes = (str = '', arr = []) => arr.reduce((acc, targetStr) => (acc || str.includes(targetStr)), false);
 
-export const setOper = (arr, { arg, val: oper, isCalculated }) => {
+export const setOper = (arr, { value, arg, val: oper, isCalculated }) => {
   const lastIdx = arr.length - 1;
   const last = arr[lastIdx];
-  const rest = [arg, oper];
   if (last.includes('(')) {
     return [...arr, oper];
   }
-  // если ставится знак после подсчета результата
-  // и он примари (!=secondaryOperations)
-  // - обрамить в скобки без последнего знака
-  // if (isCalculated
-  //   && allOperations.includes(last)
-  //   && !secondaryOperations.includes(oper)) {
-  //   return ['(', ...arr.slice(0, -1), ')', oper];
-  // } TODO
-  if (isCalculated && allOperations.includes(last)) {
-    return [...arr.slice(0, -1), oper];
+
+  if (isCalculated) {
+    if (allOperations.includes(last)) {
+      return [...arr.slice(0, -1), oper];
+    }
+    return [...arr, value, oper];
   }
-  return [...arr, ...rest];
+
+  return [...arr, arg, oper];
 };
 
 export const setResultOper = (state, { func, val }) => {

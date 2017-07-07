@@ -21,22 +21,23 @@ const funcSelector = (
   BINDED_FIELD_ACTIONS,
   state,
 ) => {
-  const [addNum, calcResult, resultDeleteLast, clearResult] = BINDED_RESULT_ACTIONS;
+  const [
+    addNum,
+    calcResult,
+    resultDeleteLast,
+    clearResult,
+    clearAll] = BINDED_RESULT_ACTIONS;
   const [memoryClear, memoryAdd, memorySet] = BINDED_MEMORY_ACTIONS;
-  const [addFunc, addOperation, clearField] = BINDED_FIELD_ACTIONS;
+  const [addFunc, addOperation, clearField, addLeftBracket, addRightBracket] = BINDED_FIELD_ACTIONS;
   const { resultState, memoryState } = state;
-
-  const setResultValue = (value) => {
-    calcResult();
-    addNum(value);
-  };
 
   const addValue = btnName => addNum(btnName.slice(4));
   const onceActn = btnName => (!resultState.includes(btnName)) && addNum(btnName.slice(4));
 
-  const resultValue = Number(resultState.isCalculated ? resultState.value : resultState.arg);
+  const resultValue = Number(resultState.isCalculated ?
+    resultState.value : resultState.arg);
   const resultArg = Number(resultState.arg);
-  const setResultAndAddFunc = (newValue, btnName, isCalculated) => {
+  const setResultAndAddFunc = (newValue, btnName) => {
     const val = btnName.slice(4);
     addFunc({ newValue, val, resultValue, isCalculated: resultState.isCalculated });
   };
@@ -54,7 +55,8 @@ const funcSelector = (
         case 'btn_MC':
           return memoryClear();
         case 'btn_MR':
-          return setResultValue(memoryState);
+          clearResult();
+          return addNum(memoryState);
         case 'btn_MS':
           return memorySet(Number(resultValue));
         case 'btn_M+':
@@ -99,7 +101,7 @@ const funcSelector = (
     },
     [CMN]: (btnName) => {
       const clearWithField = () => {
-        clearResult();
+        clearAll();
         clearField();
       };
       switch (btnName) {
@@ -115,11 +117,10 @@ const funcSelector = (
     },
     [MATH]: (btnName) => {
       switch (btnName) {
-        // TODO
         // case 'btn_(':
-        //   return noop();
+        //   return addLeftBracket();
         // case 'btn_)':
-          // return noop();
+        //   return addRightBracket();
         case 'btn_negate':
           return setResultAndAddFunc(-resultValue, btnName, resultState.isCalculated);
         case 'btn_√':
