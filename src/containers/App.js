@@ -5,7 +5,7 @@ import BtnGroupContainer from '../components/BtnGroupContainer';
 import FirstButtonGroup from '../components/FirstButtonGroup';
 import SecondButtonGroup from '../components/SecondButtonGroup';
 import ThirdButtonGroup from '../components/ThirdButtonGroup';
-import { NUM_BTNS, MEM_BTNS, CMN_BTNS, FUNC_LEFT_BTNS, FUNC_RIGHT_BTNS } from '../constants';
+import { NUM_BTNS, MEM_BTNS, CMN_BTNS, FUNC_LEFT_BTNS, FUNC_RIGHT_BTNS, INV_CMN_BTNS, INV_FUNC_LEFT_BTNS } from '../constants';
 import { normalizeField } from '../helpers';
 import { AppCss } from '../styles';
 import { btnAction } from '../actions';
@@ -13,9 +13,10 @@ import { btnAction } from '../actions';
 class App extends React.Component {
 
   componentDidUpdate() {
-    localStorage.setItem('fieldState', JSON.stringify(this.props.fieldState));
-    localStorage.setItem('resultState', JSON.stringify(this.props.resultState));
-    localStorage.setItem('memoryState', JSON.stringify(this.props.memoryState));
+    // localStorage.setItem('fieldState', JSON.stringify(this.props.fieldState));
+    // localStorage.setItem('resultState', JSON.stringify(this.props.resultState));
+    // localStorage.setItem('memoryState', JSON.stringify(this.props.memoryState));
+    // localStorage.setItem('invState', JSON.stringify(this.props.invState));
   }
 
   render() {
@@ -23,6 +24,7 @@ class App extends React.Component {
       memoryState,
       fieldState,
       resultState,
+      invState,
       btnActn,
     } = this.props;
     const normField = normalizeField(fieldState, 256);
@@ -55,11 +57,11 @@ class App extends React.Component {
                 onClick={btnActn}
               />
               <SecondButtonGroup
-                btns={CMN_BTNS}
+                btns={invState ? INV_CMN_BTNS : CMN_BTNS}
                 onClick={btnActn}
               />
               <ThirdButtonGroup
-                btnsLeft={FUNC_LEFT_BTNS}
+                btnsLeft={invState ? INV_FUNC_LEFT_BTNS : FUNC_LEFT_BTNS}
                 btnsRight={FUNC_RIGHT_BTNS}
                 btnsCenter={NUM_BTNS}
                 onClick={btnActn}
@@ -80,6 +82,7 @@ const mapStateToProps = state => ({
   resultState: state.resultState,
   fieldState: state.fieldState,
   memoryState: state.memoryState,
+  invState: state.invState,
 });
 
 const mapDispatchToProps = dispatch => ({

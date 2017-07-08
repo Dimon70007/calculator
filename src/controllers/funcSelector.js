@@ -1,3 +1,4 @@
+import math from 'mathjs';
 import { BTN_TYPES } from '../constants';
 import { factorial, yroot } from '../helpers';
 
@@ -12,6 +13,7 @@ const [
   CALC,
   NOOP,
   TOGGLE,
+  INVERTED,
 ] = BTN_TYPES;
 
 const noop = () => {};
@@ -27,19 +29,32 @@ const funcSelector = (
     resultDeleteLast,
     clearResult,
     clearAll] = BINDED_RESULT_ACTIONS;
+  const [
+    addFunc,
+    addOperation,
+    clearField,
+    addLeftBracket,
+    addRightBracket,
+    addComma] = BINDED_FIELD_ACTIONS;
   const [memoryClear, memoryAdd, memorySet] = BINDED_MEMORY_ACTIONS;
-  const [addFunc, addOperation, clearField, addLeftBracket, addRightBracket] = BINDED_FIELD_ACTIONS;
   const { resultState, memoryState } = state;
 
   const addValue = btnName => addNum(btnName.slice(4));
-  const onceActn = btnName => (!resultState.includes(btnName)) && addNum(btnName.slice(4));
-
-  const resultValue = Number(resultState.isCalculated ?
+  const toBig = (value) => {
+    try {
+      return math.bignumber(value);
+    } catch (error) {
+      // console.log('wrong value: ', value, error);
+      return Number(value);
+    }
+  };
+  const resultValue = toBig(resultState.isCalculated ?
     resultState.value : resultState.arg);
-  const resultArg = Number(resultState.arg);
+  const resultArg = toBig(resultState.arg || '0');
   const setResultAndAddFunc = (newValue, btnName) => {
     const val = btnName.slice(4);
-    addFunc({ newValue, val, resultValue, isCalculated: resultState.isCalculated });
+    const newVal = newValue.toString ? newValue.toString() : newValue;
+    addFunc({ newValue: newVal, val, resultValue, isCalculated: resultState.isCalculated });
   };
 
   const addOp = (func, btnName, value) => {
@@ -49,7 +64,7 @@ const funcSelector = (
 
   return ({
     [NUM]: addValue,
-    [COMMA]: onceActn,
+    [COMMA]: () => addComma('.'),
     [MEM]: (btnName) => {
       switch (btnName) {
         case 'btn_MC':
@@ -58,43 +73,11 @@ const funcSelector = (
           clearResult();
           return addNum(memoryState);
         case 'btn_MS':
-          return memorySet(Number(resultValue));
+          return memorySet(toBig(resultValue));
         case 'btn_M+':
-          return memoryAdd(Number(resultValue));
+          return memoryAdd(toBig(resultValue));
         case 'btn_M-':
-          return memoryAdd(-Number(resultValue));
-        default:
-          return noop();
-      }
-    },
-    [TRIGONOMETRIC]: (btnName) => {
-      switch (btnName) {
-        case ('btn_ln'):
-          return setResultAndAddFunc(Math.log(resultValue), btnName, true);
-        // TODO
-        // case ('btn_ '):
-        // case ('btn_Int'):
-        // case ('btn_dms'):
-        // case ('btn_F-E'):
-        // case ('btn_Mod'):
-        //   return noop();
-        // TODO
-        // case ('btn_Exp'):
-        //   return setResultAndAddFunc(Math.log(resultValue), btnName, true);
-        case ('btn_sinh'):
-          return setResultAndAddFunc(Math.sinh(resultValue), btnName, true);
-        case ('btn_sin'):
-          return setResultAndAddFunc(Math.sin(resultValue), btnName, true);
-        case ('btn_cosh'):
-          return setResultAndAddFunc(Math.cosh(resultValue), btnName, true);
-        case ('btn_cos'):
-          return setResultAndAddFunc(Math.cos(resultValue), btnName, true);
-        case ('btn_\\pi'):
-          return setResultAndAddFunc(Math.PI, btnName, true);
-        case ('btn_tanh'):
-          return setResultAndAddFunc(Math.tanh(resultValue), btnName, true);
-        case ('btn_tan'):
-          return setResultAndAddFunc(Math.tan(resultValue), btnName, true);
+          return memoryAdd(-toBig(resultValue));
         default:
           return noop();
       }
@@ -115,36 +98,62 @@ const funcSelector = (
           return noop();
       }
     },
+    [TRIGONOMETRIC]: (btnName) => {
+      switch (btnName) {
+        // TODO
+        // case ('btn_ '):
+        // case ('btn_Int'):
+        // case ('btn_dms'):
+        case ('btn_pi'):
+          return setResultAndAddFunc(math.PI, btnName, true);
+        // case ('btn_F-E'):
+        // TODO
+        case ('btn_sinh'):
+          return setResultAndAddFunc(math.sinh(resultValue), btnName, true);
+        case ('btn_cosh'):
+          return setResultAndAddFunc(math.cosh(resultValue), btnName, true);
+        case ('btn_tanh'):
+          return setResultAndAddFunc(math.tanh(resultValue), btnName, true);
+          // case ('btn_Exp'):
+          //   return setResultAndAddFunc(math.log(resultValue), btnName, true);
+        case ('btn_ln'):
+          return setResultAndAddFunc(math.log(resultValue), btnName, true);
+        case ('btn_sin'):
+          return setResultAndAddFunc(math.sin(resultValue), btnName, true);
+        case ('btn_cos'):
+          return setResultAndAddFunc(math.cos(resultValue), btnName, true);
+        case ('btn_tan'):
+          return setResultAndAddFunc(math.tan(resultValue), btnName, true);
+
+        default:
+          return noop();
+      }
+    },
     [MATH]: (btnName) => {
       switch (btnName) {
         // case 'btn_(':
-        //   return addLeftBracket();
+        //   return addLeftBracket({ resultState, val: '(' });
         // case 'btn_)':
-        //   return addRightBracket();
+        //   return addRightBracket({ resultState, val: ')' });
         case 'btn_negate':
           return setResultAndAddFunc(-resultValue, btnName, resultState.isCalculated);
         case 'btn_√':
-          return setResultAndAddFunc(Math.sqrt(resultValue), btnName, true);
+          return setResultAndAddFunc(math.sqrt(resultValue), btnName, true);
         case 'btn_x^2':
           return setResultAndAddFunc(resultValue ** 2, btnName, true);
         case 'btn_n!':
           return setResultAndAddFunc(factorial(resultValue), btnName, true);
-        case 'btn_x^y':
-          return addOp((a, b) => a ** b, btnName, '^');
-        case 'btn_sqrt[y]{x}':
-          return addOp((a, b) => yroot(a, b), btnName, 'yroot');
         case 'btn_x^3':
-          return setResultAndAddFunc(resultValue ** 2, btnName, true);
+          return setResultAndAddFunc(resultValue ** 3, btnName, true);
         case 'btn_sqrt[3]{x}':
-          return setResultAndAddFunc(Math.cbrt(resultValue), 'btn_3root', true);
+          return setResultAndAddFunc(math.cbrt(resultValue), 'btn_3root', true);
         case 'btn_log':
-          return setResultAndAddFunc(Math.log10(resultValue), btnName, true);
+          return setResultAndAddFunc(math.log10(resultValue), btnName, true);
         case 'btn_10^x':
           return setResultAndAddFunc(10 ** resultValue, btnName, true);
         case 'btn_1/x':
           return setResultAndAddFunc(1 / resultValue, btnName, true);
         case 'btn_%':
-          console.log('resultArg ', resultArg, 'resultValue ', resultValue);
           return setResultAndAddFunc((resultArg * resultState.value) / 100, 'btn_percent', true);
         default:
           return noop();
@@ -160,6 +169,12 @@ const funcSelector = (
           return addOp((a, b) => a - b, btnName);
         case 'btn_+':
           return addOp((a, b) => a + b, btnName);
+        case 'btn_x^y':
+          return addOp((a, b) => a ** b, btnName, '^');
+        case 'btn_sqrt[y]{x}':
+          return addOp((a, b) => yroot(a, b), btnName, 'yroot');
+        case ('btn_Mod'):
+          return addOp((a, b) => a % b, btnName, '%');
         default:
           return noop();
       }
@@ -169,8 +184,34 @@ const funcSelector = (
       return calcResult();
     },
     [NOOP]: noop,
-    [TOGGLE]: () => {
-       // 'btn_Inv' TODO
+    [TOGGLE]: noop,
+    [INVERTED]: (btnName) => {
+      switch (btnName) {
+        case ('btn_e^x'):
+          return setResultAndAddFunc(math.E ** resultValue, btnName, true);
+        // TODO
+        // case ('btn_ '):
+        // case ('btn_Frac'):
+        // case ('btn_deg'):
+        //   return noop();
+        // TODO
+        case ('btn_asinh'):
+          return setResultAndAddFunc(math.asinh(resultValue), btnName, true);
+        case ('btn_asin'):
+          return setResultAndAddFunc(math.asin(resultValue), btnName, true);
+        case ('btn_acosh'):
+          return setResultAndAddFunc(math.acosh(resultValue), btnName, true);
+        case ('btn_acos'):
+          return setResultAndAddFunc(math.acos(resultValue), btnName, true);
+        case ('btn_2*pi'):
+          return setResultAndAddFunc(2 * math.PI, btnName, true);
+        case ('btn_atanh'):
+          return setResultAndAddFunc(math.atanh(resultValue), btnName, true);
+        case ('btn_atan'):
+          return setResultAndAddFunc(math.atan(resultValue), btnName, true);
+        default:
+          return noop();
+      }
     },
   });
 };

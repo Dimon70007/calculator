@@ -1,10 +1,14 @@
-import { INVERT } from '../constants';
+import { BTN_TYPES } from '../constants';
 
 const initState = false;
 
 const resultState = (state = initState, action) => {
-  if (action.type) {
+  const [,,,,,,,,, TOGGLE, INVERTED] = BTN_TYPES;
+  if (action.type === TOGGLE) {
     return !state;
+  }
+  if (action.type === INVERTED) {
+    return false;
   }
   return state;
 };

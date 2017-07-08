@@ -9,6 +9,7 @@ const BTN_TYPES = [
   'CALC_BTN',
   'NOOP',
   'TOGGLE',
+  'INVERTED',
 ];
 
 export default BTN_TYPES;

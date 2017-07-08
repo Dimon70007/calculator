@@ -11,6 +11,7 @@ const [
   CALC,
   NOOP,
   TOGGLE,
+  INVERTED,
 ] = btnTypes;
 
 export const NUM_BTNS = [
@@ -167,7 +168,7 @@ export const INV_CMN_BTNS = [
   {
     name: 'btn_e^x',
     value: 'e^x',
-    type: TRIGONOMETRIC,
+    type: INVERTED,
   },
   {
     name: 'btn_(',
@@ -210,17 +211,17 @@ export const INV_FUNC_LEFT_BTNS = [
   {
     name: 'btn_Frac',
     value: 'Frac',
-    type: TRIGONOMETRIC,
+    type: INVERTED,
   },
   {
-    name: 'btn_sinh^-1',
-    value: 'sinh^-1',
-    type: TRIGONOMETRIC,
+    name: 'btn_asinh',
+    value: 'sinh^{-1}',
+    type: INVERTED,
   },
   {
-    name: 'btn_sin^-1',
-    value: 'sin^-1',
-    type: TRIGONOMETRIC,
+    name: 'btn_asin',
+    value: 'sin^{-1}',
+    type: INVERTED,
   },
   {
     name: 'btn_x^2',
@@ -235,42 +236,42 @@ export const INV_FUNC_LEFT_BTNS = [
   {
     name: 'btn_deg',
     value: 'deg',
-    type: TRIGONOMETRIC,
+    type: INVERTED,
   },
   {
-    name: 'btn_cosh^-1',
-    value: 'cosh^-1',
-    type: TRIGONOMETRIC,
+    name: 'btn_acosh',
+    value: 'cosh^{-1}',
+    type: INVERTED,
   },
   {
-    name: 'btn_cos^-1',
-    value: 'cos^-1',
-    type: TRIGONOMETRIC,
+    name: 'btn_acos',
+    value: 'cos^{-1}',
+    type: INVERTED,
   },
   {
     name: 'btn_x^y',
     value: 'x^y',
-    type: MATH,
+    type: OPERATION,
   },
   {
     name: 'btn_sqrt[y]{x}',
     value: '\\sqrt[y]{x}',
-    type: MATH,
+    type: OPERATION,
   },
   {
     name: 'btn_2*pi',
-    value: '\\2*pi',
-    type: TRIGONOMETRIC,
+    value: '2\\pi',
+    type: INVERTED,
   },
   {
-    name: 'btn_tanh^-1',
-    value: 'tanh^-1',
-    type: TRIGONOMETRIC,
+    name: 'btn_atanh',
+    value: 'tanh^{-1}',
+    type: INVERTED,
   },
   {
-    name: 'btn_tan^-1',
-    value: 'tan^-1',
-    type: TRIGONOMETRIC,
+    name: 'btn_atan',
+    value: 'tan^{-1}',
+    type: INVERTED,
   },
   {
     name: 'btn_x^3',
@@ -295,7 +296,7 @@ export const INV_FUNC_LEFT_BTNS = [
   {
     name: 'btn_Mod',
     value: 'Mod',
-    type: TRIGONOMETRIC,
+    type: OPERATION,
   },
   {
     name: 'btn_log',
@@ -354,12 +355,12 @@ export const FUNC_LEFT_BTNS = [
   {
     name: 'btn_x^y',
     value: 'x^y',
-    type: MATH,
+    type: OPERATION,
   },
   {
     name: 'btn_sqrt[y]{x}',
     value: '\\sqrt[y]{x}',
-    type: MATH,
+    type: OPERATION,
   },
   {
     name: 'btn_pi',
@@ -399,7 +400,7 @@ export const FUNC_LEFT_BTNS = [
   {
     name: 'btn_Mod',
     value: 'Mod',
-    type: TRIGONOMETRIC,
+    type: OPERATION,
   },
   {
     name: 'btn_log',

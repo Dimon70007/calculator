@@ -22,6 +22,7 @@ export const FIELD_ACTION_TYPES = [
   'CLEAR_FIELD',
   'ADD_LEFT_BRACKET',
   'ADD_RIGHT_BRACKET',
+  'ADD_COMMA',
 ];
 
 export BTN_TYPES from './btnTypes';
@@ -31,4 +32,6 @@ export {
   CMN_BTNS,
   FUNC_LEFT_BTNS,
   FUNC_RIGHT_BTNS,
+  INV_CMN_BTNS,
+  INV_FUNC_LEFT_BTNS,
 } from './buttons';

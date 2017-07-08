@@ -1,5 +1,5 @@
 import { RESULT_ACTION_TYPES, FIELD_ACTION_TYPES } from '../constants';
-import { parseArrOfStr /* , factorial, yroot */} from '../helpers';
+import { parseArrOfStr, calcResult, newHistory, addOperWithBracket } from '../helpers';
 
 const persistedState = localStorage.getItem('resultState');
 const initObj = {
@@ -7,9 +7,9 @@ const initObj = {
   operation: '',
   history: [''],
   value: '0',
-  arg: '',
+  arg: '0',
   bracketsCountDiff: 0,
-  func: () => {},
+  // func: () => {},
 };
 const initState = persistedState ? JSON.parse(persistedState) : initObj;
 
@@ -22,25 +22,15 @@ const resultState = (state = initState, action) => {
     clearResult,
     clearAll,
   ] = RESULT_ACTION_TYPES;
-  const [addFunc, addOperation, , addLeftBracket, addRightBracket] = FIELD_ACTION_TYPES;
+  const [addFunc, addOperation, , addLeftBracket, addRightBracket, addComma] = FIELD_ACTION_TYPES;
   const {
     isCalculated,
-    operation,
+    // operation,
     value,
     arg,
     history,
     bracketsCountDiff,
   } = state;
-
-  const newHistory = (oldHistory) => {
-    if (operation === 'yroot') {
-      const previousArg = oldHistory.length ? oldHistory[oldHistory.length - 1] : value;
-      return [...oldHistory.slice(0, -1), `yroot(${previousArg}, ${arg})`];
-    }
-    return [...oldHistory, operation, arg];
-  };
-
-  const calcHistory = oldHistory => (oldHistory ? ['(', ...newHistory(oldHistory), ')'] : arg);
 
   try {
     if (isCalculated) {
@@ -52,13 +42,14 @@ const resultState = (state = initState, action) => {
             arg: payload,
 
           };
-        case calculateResult:
+        case addComma:
           return {
             ...state,
-            isCalculated: true,
-            value: history.length > 2 ? parseArrOfStr(newHistory(history)) : arg,
-            history: calcHistory(history),
+            isCalculated: false,
+            arg: `0${payload}`,
           };
+        case calculateResult:
+          return calcResult(state);
         case addOperation:
           return {
             ...state,
@@ -80,11 +71,15 @@ const resultState = (state = initState, action) => {
             isCalculated: false,
             arg: '0',
           };
-        case addLeftBracket:
-          return {
-            ...state,
-            bracketsCountDiff: bracketsCountDiff + 1,
-          };
+      // case addLeftBracket:
+      //   return addLeftBracket(state)
+        // {
+        //   ...state,
+        //   isCalculated: false,
+        //   history: [...history, ['0']],
+        //   arg: '0'
+        //   bracketsCountDiff: bracketsCountDiff + 1,
+        // };
         default:
           return state;
       }
@@ -96,19 +91,14 @@ const resultState = (state = initState, action) => {
           arg: arg === '0' ? payload : `${arg}${payload}`,
         };
       case calculateResult:
-        return {
-          ...state,
-          isCalculated: true,
-          value: history.length > 2 ? parseArrOfStr(newHistory(history)) : arg,
-          history: calcHistory(history),
-        };
+        return calcResult(state);
       case addOperation:
         return {
           ...state,
           isCalculated: true,
-          value: history.length > 2 ? parseArrOfStr(newHistory(history)) : arg,
+          value: history.length > 2 ? parseArrOfStr(newHistory(state)) : arg,
           operation: payload.val,
-          history: newHistory(history),
+          history: newHistory(state),
         };
       case addFunc:
         return {
@@ -135,6 +125,11 @@ const resultState = (state = initState, action) => {
           bracketsCountDiff: bracketsCountDiff - 1,
           history: [...history.slice(0, -1), payload],
         };
+      case addComma:
+        return {
+          ...state,
+          arg: String(arg).includes(payload) ? arg : `${arg}${payload}`,
+        };
       default:
         return state;
     }
@@ -142,7 +137,7 @@ const resultState = (state = initState, action) => {
     return {
       ...state,
       isCalculated: true,
-      value: `wrong input ${error}`,
+      value: 'wrong input or operation',
     };
   }
 };
