@@ -14,6 +14,12 @@ body {
   height:auto;
   padding: 15px;
 }
+
+.App__well__3EN6I {
+  text-align: right;
+  height: 7em; 
+  overflow-x: hidden;
+}
 .FirstButtonGroup__group__Yw5-Y {
   width: auto;
   display: inline-block;
@@ -24,6 +30,20 @@ body {
   text-align: right;
   /*margin: 2px;*/
   /*padding: 2px;*/
+}
+.CreateButton__normal__1obZ9 {
+  margin-bottom: 5px;
+  margin-left: 5px;
+  font-size: 1em;
+  width:5em;
+  height:2.5em;
+}
+.CreateButton__wide__3Ldhd {
+  width: 10.363em;
+}
+
+.CreateButton__high__2TUt7 {
+  height: 5.363em;
 }
 
 /*# sourceMappingURL=../home/otvazhniy/jsProjects/calculator-on-react-redux/app.map*/

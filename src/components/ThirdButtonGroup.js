@@ -15,11 +15,11 @@ const itemFunc = (btn, onClick) => {
   switch (btn.name) {
     case 'btn_0':
       return wrap({
-        width: '10.363em',
+        btnSize: 'wide',
       });
     case 'btn_=':
       return wrap({
-        height: '5.363em',
+        btnSize: 'high',
       });
     default:
       return wrap();

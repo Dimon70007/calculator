@@ -1,13 +1,15 @@
 import React from 'react';
 import parseValue from './parseValue';
+import { CreateButtonCss } from '../styles';
 
 const noop = () => {};
 
 const CreateButton = ({
                     name = 'btn_ ',
                     value = ' ',
-                    width = '5em',
-                    height = '2.5em',
+                    // width = '5em',
+                    // height = '2.5em',
+                    btnSize = 'normal',
                     btnAction = noop }) => {
   const btnValue = parseValue(value);
   const clickHandler = (event) => {
@@ -16,8 +18,7 @@ const CreateButton = ({
   };
   return (
     <button
-      className={'btn btn-default'}
-      style={{ 'margin-bottom': '5px', 'margin-left': '5px', width, height, 'font-size': '1em' }}
+      className={`btn btn-default ${CreateButtonCss[btnSize]}`}
       name={name}
       onClick={clickHandler}
     >

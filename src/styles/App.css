@@ -14,3 +14,9 @@ body {
   height:auto;
   padding: 15px;
 }
+
+.well {
+  text-align: right;
+  height: 7em; 
+  overflow-x: hidden;
+}

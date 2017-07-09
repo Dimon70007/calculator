@@ -1,0 +1,16 @@
+.normal {
+  margin-bottom: 5px;
+  margin-left: 5px;
+  font-size: 1em;
+  width:5em;
+  height:2.5em;
+}
+.wide {
+  composes: normal;
+  width: 10.363em;
+}
+
+.high {
+  composes: normal;
+  height: 5.363em;
+}

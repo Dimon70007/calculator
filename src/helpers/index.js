@@ -4,7 +4,7 @@ import math from 'mathjs';
 export const bigmath = math.create({
   number: 'BigNumber', // Default type of number:
                        // 'number' (default), 'BigNumber', or 'Fraction'
-  precision: 64,       // Number of significant digits for BigNumbers
+  precision: 32,       // Number of significant digits for BigNumbers
 });
 
 const parser = bigmath.parser();
@@ -13,6 +13,7 @@ parser.set('factorial', factorial);
 
 const secondaryOperations = ['+', '-'];
 const allOperations = ['+', '-', '*', '/', '^', 'yroot', '%'];
+const constants = ['pi'];
 
 export function yroot(value, base) {
   return math.nthRoot(math.bignumber(value), math.bignumber(base));
@@ -43,12 +44,11 @@ export const parseArrOfStr = (arrOfStr) => {
   const parsed = parser.eval(concated.join(' '));
   return parsed.toString ? parsed.toString() : parsed;
 };
-export itemsWrapper from './itemsWrapper';
-export normalizeField from './normalizeField';
 
 
 export const addFunction = (arr, { val: func, resultValue }) => {
-  const item = `${func}(${resultValue})`;
+  const newFunc = param => (constants.includes(func) ? func : `${func}(${param})`);
+  const item = newFunc(resultValue);
   const last = arr[arr.length - 1];
   if (last.includes(')')) {
     return [...arr.slice(0, -1), `${func}(${last})`];
@@ -132,3 +132,6 @@ export const calcResult = (state) => {
     history: newHist,
   };
 };
+
+export itemsWrapper from './itemsWrapper';
+export normalizeField from './normalizeField';

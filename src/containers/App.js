@@ -44,7 +44,7 @@ class App extends React.Component {
             <h3 className='panel-title'>Calculator</h3>
           </div>
           <div className='panel-body'>
-            <div className='well text-primary' style={{ textAlign: 'right', height: '7em', 'overflow-x': 'hidden' }}>
+            <div className={`well text-primary ${AppCss.well}`}>
               {fieldStr}
               <br />
               <div className='row'>
