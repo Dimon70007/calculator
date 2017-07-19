@@ -8,9 +8,9 @@ const resultState = (state = initState, action) => {
   const [memoryClear, memoryAdd, memorySet] = MEMORY_ACTION_TYPES;
   switch (type) {
     case memoryAdd:
-      return state + payload;
+      return Number(state) + Number(payload);
     case memorySet:
-      return payload;
+      return Number(payload);
     case memoryClear:
       return 0;
     default:

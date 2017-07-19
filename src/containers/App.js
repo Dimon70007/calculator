@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import BtnGroupContainer from '../components/BtnGroupContainer';
 import FirstButtonGroup from '../components/FirstButtonGroup';
@@ -13,10 +13,10 @@ import { btnAction } from '../actions';
 class App extends React.Component {
 
   componentDidUpdate() {
-    // localStorage.setItem('fieldState', JSON.stringify(this.props.fieldState));
-    // localStorage.setItem('resultState', JSON.stringify(this.props.resultState));
-    // localStorage.setItem('memoryState', JSON.stringify(this.props.memoryState));
-    // localStorage.setItem('invState', JSON.stringify(this.props.invState));
+    localStorage.setItem('fieldState', JSON.stringify(this.props.fieldState));
+    localStorage.setItem('resultState', JSON.stringify(this.props.resultState));
+    localStorage.setItem('memoryState', JSON.stringify(this.props.memoryState));
+    localStorage.setItem('invState', JSON.stringify(this.props.invState));
   }
 
   render() {
